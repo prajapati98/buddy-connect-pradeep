@@ -1,16 +1,18 @@
-import React, { useState, FormEvent } from "react";
+import React from "react";
 import { Box, Typography } from "@mui/material";
 import FormField from "./FormField";
 import BtnSubmit from "./BtnSubmit";
 import logo from "../assets/image/logo.png";
 import { useFormik } from "formik";
 import { loginSchema } from "../schemas/loginSchema";
+import { useDispatch, useSelector } from "react-redux";
+import { login, logout } from "../features/login/loginSlice";
+import { AppDispatch } from "../store";
+import { useNavigate } from "react-router-dom";
 const Login: React.FC = () => {
-  // const handleSubmit = (e: FormEvent) => {
-  //   e.preventDefault();
-  //   // You can handle form submission here
-  // };
-
+  const navigate = useNavigate();
+  const dispatch = useDispatch<AppDispatch>();
+  const user = useSelector((state: any) => state.login.user);
   const initialValues: {
     email: string;
     password: string;
@@ -18,12 +20,19 @@ const Login: React.FC = () => {
     email: "",
     password: "",
   };
+
   const { handleChange, handleBlur, handleSubmit, values, errors, touched } =
     useFormik({
       initialValues: initialValues,
       validationSchema: loginSchema,
       onSubmit: (values, { setSubmitting }) => {
-        console.log(values);
+        // Dispatch the login action with the correct payload structure
+        if (user) {
+          dispatch(logout());
+        } else {
+          dispatch(login({ email: values.email, password: values.password }));
+          navigate("/");
+        }
       },
     });
 
