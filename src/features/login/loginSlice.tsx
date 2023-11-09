@@ -1,6 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { userInfo } from "../../network/user";
-
 interface User {
   username: string;
 }
@@ -21,7 +20,6 @@ export const login = createAsyncThunk(
   "login/login",
   async (credentials: { email: string; password: string }, thunkAPI) => {
     try {
-      console.log(credentials);
       const response = await userInfo(credentials);
 
       if (response.status !== 200) {

@@ -1,6 +1,6 @@
 import React from "react";
 import { Box, Typography } from "@mui/material";
-import FormField from "./FormField";
+import InputField from "./InputField";
 import BtnSubmit from "./BtnSubmit";
 import logo from "../assets/image/logo.png";
 import { useFormik } from "formik";
@@ -57,7 +57,7 @@ const Login: React.FC = () => {
           Login
         </Typography>
         <form onSubmit={handleSubmit}>
-          <FormField
+          <InputField
             label="Email"
             type="email"
             name="email"
@@ -67,7 +67,7 @@ const Login: React.FC = () => {
             handleBlur={handleBlur}
             touched={touched}
           />
-          <FormField
+          <InputField
             label="Password"
             type="password"
             name="password"
@@ -77,7 +77,7 @@ const Login: React.FC = () => {
             handleBlur={handleBlur}
             touched={touched}
           />
-          <BtnSubmit />
+          <BtnSubmit btnName="Login" />
         </form>
       </Box>
     </Box>

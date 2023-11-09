@@ -1,6 +1,11 @@
 import { Button } from "@mui/material";
 import React from "react";
-const BtnSubmit = () => {
+
+interface BtnType {
+  btnName: string;
+}
+
+const BtnSubmit: React.FC<BtnType> = ({ btnName }) => {
   return (
     <Button
       type="submit"
@@ -13,7 +18,7 @@ const BtnSubmit = () => {
         marginTop: "20px",
       }}
     >
-      Login
+      {btnName}
     </Button>
   );
 };

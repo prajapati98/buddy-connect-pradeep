@@ -8,9 +8,7 @@ interface ProtectedProps {
 
 const Protected: React.FC<ProtectedProps> = ({ children }) => {
   const navigate = useNavigate();
-  console.log(isAuthenticated());
   useEffect(() => {
-    console.log(isAuthenticated());
     if (!isAuthenticated()) {
       navigate("/login");
     }

@@ -7,6 +7,7 @@ import Footer from "./Footer";
 import Dashboard from "./Dashboard";
 import Protected from "./ProtectedRoute";
 import PublicRoute from "./PublicRoute";
+import RegisterUser from "./RegisterUser";
 
 interface AppLayoutProps {
   children: React.ReactNode;
@@ -15,8 +16,7 @@ interface AppLayoutProps {
 const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
   return (
     <>
-      <Sidebar />
-      {children}
+      <Sidebar>{children}</Sidebar>
       <Footer />
     </>
   );
@@ -44,6 +44,16 @@ const router = createBrowserRouter([
           <Login />
         </PublicRoute>
       </LoginLayout>
+    ),
+  },
+  {
+    path: "/register-user",
+    element: (
+      <AppLayout>
+        <Protected>
+          <RegisterUser />
+        </Protected>
+      </AppLayout>
     ),
   },
 ]);

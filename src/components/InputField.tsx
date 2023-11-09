@@ -8,7 +8,7 @@ type FormFieldProps = TextFieldProps & {
   handleBlur: (e: React.FocusEvent<HTMLInputElement>) => void;
 };
 
-const FormField: React.FC<FormFieldProps> = (props) => {
+const InputField: React.FC<FormFieldProps> = (props) => {
   const { errors, touched, handleChange, handleBlur, ...rest } = props;
 
   return (
@@ -44,4 +44,4 @@ const FormField: React.FC<FormFieldProps> = (props) => {
   );
 };
 
-export default FormField;
+export default InputField;

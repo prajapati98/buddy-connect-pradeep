@@ -17,7 +17,6 @@ import { USER_ENDPOINT } from "./EndPoints";
 // };
 
 export const userInfo = (payload: any) => {
-  console.log(postRequest(USER_ENDPOINT.USER_INFO, payload));
   return postRequest(USER_ENDPOINT.USER_INFO, payload);
 };
 

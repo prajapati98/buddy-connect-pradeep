@@ -9,24 +9,33 @@ export const axiosClient = axios.create({
 });
 
 // axiosClient.interceptors.request.use(
-//   (config: AxiosRequestConfig) => {
+//   (config) => {
+//     const user = JSON.parse(localStorage.getItem("user") || "{}");
+//     const hasAccessToken = user.token;
+
+//     // Set the 'Authorization' header with the access token
+//     config.headers.Authorization = `Bearer ${hasAccessToken}`;
+
 //     if (config.data instanceof FormData) {
-//       config.headers["Content-Type"] = config.data.getHeaders();
+//       // Set the 'Content-Type' header for FormData explicitly
+//       config.headers["Content-Type"] = "multipart/form-data";
 //     } else {
+//       // Set the 'Content-Type' header for JSON data
 //       config.headers["Content-Type"] = "application/json";
 //     }
+
 //     return config;
 //   },
-//   (error: AxiosError) => {
-//     console.log("error", error);
+//   (error) => {
+//     console.error("Request error", error);
 //     return Promise.reject(error);
-//   },
-//   { synchronous: true }
+//   }
 // );
 
 // axiosClient.interceptors.response.use(
-//   (response: AxiosResponse) => {
-//     console.log("response", response);
+//   (response) => {
+//     // console.log("response", response);
+//     localStorage.setItem("user", JSON.stringify(response.data));
 //     if (response && response.data && response.data.type === "application/pdf") {
 //       return response.data;
 //     } else if (response.data) {
@@ -36,25 +45,28 @@ export const axiosClient = axios.create({
 //     }
 //     return Promise.reject(response.data);
 //   },
-//   (error: AxiosError) => {
-//     console.log("error-r", error);
+//   (error) => {
+//     console.error("Response error", error);
 
 //     switch (error?.response?.status) {
 //       case 400:
-//         return Promise.reject(error.response.status);
+//         return Promise.reject(error.response?.status);
 //       case 401:
-//         return Promise.reject(error.response.status);
+//         return Promise.reject(error.response?.status);
+
 //       case 403:
-//         unauthorizeAccess(error.response.status);
-//         return Promise.reject(error.response.status);
+//         unauthorizeAccess(error.response?.status);
+//         return Promise.reject(error.response?.status);
+
 //       case 404:
-//         return Promise.reject(error.response.status);
+//         return Promise.reject(error.response?.status);
+
 //       case 405:
-//         return Promise.reject(error.response.status);
+//         return Promise.reject(error.response?.status);
 //       case 501:
-//         return Promise.reject(error.response.status);
+//         return Promise.reject(error.response?.status);
 //       case 422:
-//         return Promise.reject(error.response.data);
+//         return Promise.reject(error.response?.data);
 //       default:
 //         return Promise.reject(error);
 //     }
