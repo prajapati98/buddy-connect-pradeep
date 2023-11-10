@@ -21,13 +21,9 @@ export const login = createAsyncThunk(
   async (credentials: { email: string; password: string }, thunkAPI) => {
     try {
       const response = await userInfo(credentials);
-
-      if (response.status !== 200) {
-        throw new Error("Failed to login");
-      }
-      const data = await response.data;
-      localStorage.setItem("user", JSON.stringify(data.response));
-      return data.data;
+      localStorage.setItem("user", JSON.stringify(response.data.response));
+       window.location.reload(); 
+      return response.data.response;
     } catch (error) {
       throw new Error("Failed to login");
     }

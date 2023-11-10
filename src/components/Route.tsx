@@ -8,6 +8,8 @@ import Dashboard from "./Dashboard";
 import Protected from "./ProtectedRoute";
 import PublicRoute from "./PublicRoute";
 import RegisterUser from "./RegisterUser";
+import UserList from "./UserList";
+
 
 interface AppLayoutProps {
   children: React.ReactNode;
@@ -52,6 +54,16 @@ const router = createBrowserRouter([
       <AppLayout>
         <Protected>
           <RegisterUser />
+        </Protected>
+      </AppLayout>
+    ),
+  },
+  {
+    path: "/user-list",
+    element: (
+      <AppLayout>
+        <Protected>
+          <UserList />
         </Protected>
       </AppLayout>
     ),

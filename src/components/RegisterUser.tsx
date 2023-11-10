@@ -11,8 +11,13 @@ import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
+import { registerSchema } from "../schemas/registerSchema";
 
-export default function EmployeeForm() {
+export default function RegisterUser() {
+  enum Gender {
+    Male = "male",
+    Female = "female",
+  }
   interface FormData {
     firstName: string;
     lastName: string;
@@ -23,7 +28,7 @@ export default function EmployeeForm() {
     contact: string;
     country: string;
     dob: string;
-    gender: string;
+    gender: Gender;
     joiningDate: string;
     panCard: string;
     designation: string;
@@ -39,7 +44,7 @@ export default function EmployeeForm() {
     contact: "",
     country: "",
     dob: "",
-    gender: "male",
+    gender: Gender.Male,
     joiningDate: "",
     panCard: "",
     designation: "",
@@ -54,7 +59,7 @@ export default function EmployeeForm() {
     touched,
   } = useFormik({
     initialValues: initialValues,
-    //   validationSchema: loginSchema,
+       validationSchema: registerSchema,
     onSubmit: (values, { setSubmitting }) => {
       console.log(values);
     },
@@ -271,9 +276,13 @@ export default function EmployeeForm() {
                   setFieldValue("designation", event.target.value as string)
                 }
               >
-                <MenuItem value="Ten">Ten</MenuItem>
-                <MenuItem value="Twenty">Twenty</MenuItem>
-                <MenuItem value="Thirty">Thirty</MenuItem>
+                <MenuItem value="Manager">Manager</MenuItem>
+                <MenuItem value="Team Lead">Team Lead</MenuItem>
+                <MenuItem value="Senior">Software Engineer</MenuItem>
+                <MenuItem value="Manager">Associate Engineer</MenuItem>
+                <MenuItem value="Junior Software Engineer">Junior Software Engineer</MenuItem>
+                <MenuItem value="TraineeEngineer">Trainee Engineer</MenuItem>
+                <MenuItem value="Intern">Intern</MenuItem>
               </Select>
             </FormControl>
           </Box>
