@@ -7,6 +7,8 @@ const city = /^[a-zA-Z]{3,100}$/;
 const state = /^[a-zA-Z]{2,100}$/;
 const zipCode = /^[0-9]{6}$/;
 const panCard = /^([a-zA-Z]){5}([0-9]){4}([a-zA-Z]){1}$/;
+const emailRegex = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}$/;
+
 export const registerSchema = Yup.object().shape({
   first_name: Yup.string()
     .min(3, "Please enter a valid First Name with a minimum of 3 characters.")
@@ -49,4 +51,7 @@ export const registerSchema = Yup.object().shape({
   pan_card: Yup.string()
     .matches(panCard, "PAN Card is not in the correct format")
     .required("PAN Card is required"),
+  email: Yup.string()
+    .matches(emailRegex, "Email is not in the correct format")
+    .required("Email is required"),
 });

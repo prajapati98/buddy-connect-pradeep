@@ -27,7 +27,7 @@ axiosClient.interceptors.request.use(
     return config;
   },
   (error) => {
-    console.error("Request error", error);
+    // console.error("Request error", error);
     return Promise.reject(error);
   }
 );
@@ -43,24 +43,24 @@ axiosClient.interceptors.response.use(
     return Promise.reject(response.data);
   },
   (error) => {
-    console.error("Response error", error);
+    // console.error("Response error", error);
 
     switch (error?.response?.status) {
       case 400:
-        return Promise.reject(error.response?.status);
+        return Promise.reject(error.response?.error);
       case 401:
-        return Promise.reject(error.response?.status);
+        return Promise.reject(error.response?.error);
 
       case 403:
-        return Promise.reject(error.response?.status);
+        return Promise.reject(error.response?.error);
 
       case 404:
-        return Promise.reject(error.response?.status);
+        return Promise.reject(error.response?.error);
 
       case 405:
-        return Promise.reject(error.response?.status);
+        return Promise.reject(error.response?.error);
       case 501:
-        return Promise.reject(error.response?.status);
+        return Promise.reject(error.response?.error);
       case 422:
         return Promise.reject(error.response?.data);
       default:

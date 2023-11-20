@@ -9,6 +9,7 @@ import Protected from "./ProtectedRoute";
 import PublicRoute from "./PublicRoute";
 import RegisterUser from "./RegisterUser";
 import UserList from "./UserList";
+import UserUpdate from "./UserUpdate";
 
 interface AppLayoutProps {
   children: React.ReactNode;
@@ -63,6 +64,16 @@ const router = createBrowserRouter([
       <AppLayout>
         <Protected>
           <UserList />
+        </Protected>
+      </AppLayout>
+    ),
+  },
+  {
+    path: "UserUpdate/:id",
+    element: (
+      <AppLayout>
+        <Protected>
+          <UserUpdate />
         </Protected>
       </AppLayout>
     ),

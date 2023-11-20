@@ -15,13 +15,16 @@ import { USER_ENDPOINT } from "./EndPoints";
 export const getUserList = () => {
   return getRequest(USER_ENDPOINT.USER_LIST);
 };
+export const GET_SINGLE_USER = (id: Number) => {
+  return getRequest(`${USER_ENDPOINT.GET_SINGLE_USER}?id=${id}`);
+};
 
 export const userInfo = (payload: any) => {
   return postRequest(USER_ENDPOINT.USER_INFO, payload);
 };
 
-export const REISTER_USER = (payload: any) => {
-  return postRequest(USER_ENDPOINT.REISTER_USER, payload);
+export const REGISTER_USER = (payload: any) => {
+  return postRequest(USER_ENDPOINT.REGISTER_USER, payload);
 };
 export const IMAGE_UPLOAD = (payload: any) => {
   return postRequest(USER_ENDPOINT.IMAGE_UPLOAD, payload);

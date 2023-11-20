@@ -12,6 +12,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { action } from "../features/userList/action";
 import { Button } from "@mui/material";
 import { DELETE_USER } from "../network/user";
+import { Link } from "react-router-dom";
 
 interface UserListData {
   profile: string;
@@ -79,7 +80,7 @@ const UserList = () => {
               </TableCell>
               <TableCell>
                 <Button variant="contained" color="warning">
-                  Update
+                  <Link to={`/UserUpdate/${row.id}`}>Update</Link>
                 </Button>
               </TableCell>
               <TableCell>

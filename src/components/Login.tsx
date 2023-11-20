@@ -24,7 +24,6 @@ const Login: React.FC = () => {
       initialValues: initialValues,
       validationSchema: loginSchema,
       onSubmit: (values, { setSubmitting }) => {
-        // Dispatch the login action with the correct payload structure
         if (user) {
           dispatch(logout());
         } else {
