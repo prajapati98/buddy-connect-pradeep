@@ -1,20 +1,19 @@
 import * as Yup from "yup";
 
 const letters = /^[a-zA-Z]{3,255}$/;
-const Number = /^((0)|([+]91 ))\d{10}$/;
+const Number = /^(0|\+91)?\d{10}$/;
 const dob = /^\d{4}-\d{2}-\d{2}$/;
 const city = /^[a-zA-Z]{3,100}$/;
 const state = /^[a-zA-Z]{2,100}$/;
 const zipCode = /^[0-9]{6}$/;
 const panCard = /^([a-zA-Z]){5}([0-9]){4}([a-zA-Z]){1}$/;
-
 export const registerSchema = Yup.object().shape({
-  firstName: Yup.string()
+  first_name: Yup.string()
     .min(3, "Please enter a valid First Name with a minimum of 3 characters.")
     .max(225, "Please enter a name with 255 characters or fewer.")
     .matches(letters, "First Name is not in the correct format")
     .required("First Name is required"),
-  lastName: Yup.string()
+  last_name: Yup.string()
     .min(3, "Please enter a valid Last Name with a minimum of 3 characters.")
     .max(225, "Please enter a name with 255 characters or fewer.")
     .matches(letters, "Last Name is not in the correct format")
@@ -29,7 +28,7 @@ export const registerSchema = Yup.object().shape({
     .max(100, "Please enter a city with 100 characters or fewer.")
     .matches(city, "City is not in the correct format")
     .required("City is required"),
-  zipCode: Yup.string()
+  zip_code: Yup.string()
     .matches(zipCode, "Zip Code is not in the correct format")
     .required("Zip Code is required"),
   state: Yup.string()
@@ -44,10 +43,10 @@ export const registerSchema = Yup.object().shape({
   dob: Yup.string()
     .matches(dob, "Date of Birth is not in the correct format (yyyy-mm-dd)")
     .required("Date of Birth is required"),
-  joiningDate: Yup.string()
+  joining_date: Yup.string()
     .matches(dob, "Joining Date is not in the correct format (yyyy-mm-dd)")
     .required("Joining Date is required"),
-  panCard: Yup.string()
+  pan_card: Yup.string()
     .matches(panCard, "PAN Card is not in the correct format")
     .required("PAN Card is required"),
 });

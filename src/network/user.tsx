@@ -1,4 +1,4 @@
-import { postRequest } from "./ApiRequest";
+import { postRequest, getRequest, deleteRequest } from "./ApiRequest";
 import { USER_ENDPOINT } from "./EndPoints";
 
 // export const fetchAllProducts = () => {
@@ -12,12 +12,22 @@ import { USER_ENDPOINT } from "./EndPoints";
 //   return postRequest(USER_ENDPOINT.AUTH_CONFIRM_PHONE + `?code=${payload}`);
 // };
 
-// export const getUserInfo = () => {
-//   return getRequest(USER_ENDPOINT.USER_INFO);
-// };
+export const getUserList = () => {
+  return getRequest(USER_ENDPOINT.USER_LIST);
+};
 
 export const userInfo = (payload: any) => {
   return postRequest(USER_ENDPOINT.USER_INFO, payload);
+};
+
+export const REISTER_USER = (payload: any) => {
+  return postRequest(USER_ENDPOINT.REISTER_USER, payload);
+};
+export const IMAGE_UPLOAD = (payload: any) => {
+  return postRequest(USER_ENDPOINT.IMAGE_UPLOAD, payload);
+};
+export const DELETE_USER = (id: string) => {
+  return deleteRequest(`${USER_ENDPOINT.DELETE_USER}?user_id=${id}`);
 };
 
 // export const getVehicleTypes = () => {

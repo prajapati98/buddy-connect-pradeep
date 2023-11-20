@@ -12,41 +12,53 @@ import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
 import { registerSchema } from "../schemas/registerSchema";
+import { AppDispatch } from "../store";
+import { useDispatch } from "react-redux";
+import { action } from "../features/user/action";
+import { useNavigate } from "react-router-dom";
 
 export default function RegisterUser() {
+  const dispatch = useDispatch<AppDispatch>();
+  const navigate = useNavigate();
+
   enum Gender {
     Male = "male",
     Female = "female",
   }
+
   interface FormData {
-    firstName: string;
-    lastName: string;
+    first_name: string;
+    last_name: string;
     address: string;
     city: string;
-    zipCode: string;
+    zip_code: string;
     state: string;
     contact: string;
     country: string;
     dob: string;
     gender: Gender;
-    joiningDate: string;
-    panCard: string;
+    joining_date: string;
+    pan_card: string;
     designation: string;
+    email: string;
+    role: string;
   }
 
   const initialValues: FormData = {
-    firstName: "",
-    lastName: "",
+    email: "",
+    role: "",
+    first_name: "",
+    last_name: "",
     address: "",
     city: "",
-    zipCode: "",
+    zip_code: "",
     state: "",
     contact: "",
     country: "",
     dob: "",
     gender: Gender.Male,
-    joiningDate: "",
-    panCard: "",
+    joining_date: "",
+    pan_card: "",
     designation: "",
   };
   const {
@@ -59,19 +71,15 @@ export default function RegisterUser() {
     touched,
   } = useFormik({
     initialValues: initialValues,
-       validationSchema: registerSchema,
+    validationSchema: registerSchema,
     onSubmit: (values, { setSubmitting }) => {
-      console.log(values);
+      dispatch(action(values));
+      navigate("/user-list");
     },
   });
+
   return (
-    <Box
-      display="flex"
-      flexDirection="column"
-      alignItems="center"
-      justifyContent="center"
-      height="100vh"
-    >
+    <Box display="flex" flexDirection="column" alignItems="center">
       <Box className="RegistrationFrom">
         <Typography
           variant="h5"
@@ -79,11 +87,52 @@ export default function RegisterUser() {
             fontSize: "30px",
             fontWeight: "700",
             textAlign: "center",
+            marginBottom: "20px",
           }}
         >
           Registration From
         </Typography>
         <form onSubmit={handleSubmit} style={{ width: "100%" }}>
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+            }}
+          >
+            <InputField
+              label="Email"
+              type="email"
+              name="email"
+              value={values.email}
+              errors={errors}
+              fullWidth
+              handleChange={handleChange}
+              handleBlur={handleBlur}
+              touched={touched}
+            />
+            <FormControl
+              sx={{
+                width: "42%",
+              }}
+            >
+              <InputLabel id="select-role">Designation</InputLabel>
+              <Select
+                labelId="select-role"
+                id="demo-simple-select"
+                value={values.role}
+                label="Designation"
+                onChange={(event) =>
+                  setFieldValue("role", event.target.value as string)
+                }
+              >
+                <MenuItem value="superAdmin">superAdmin</MenuItem>
+                <MenuItem value="admin">admin</MenuItem>
+                <MenuItem value="hr">hr</MenuItem>
+                <MenuItem value="associate">associate</MenuItem>
+              </Select>
+            </FormControl>
+          </Box>
           <Box
             sx={{
               display: "flex",
@@ -94,8 +143,8 @@ export default function RegisterUser() {
             <InputField
               label="First Name"
               type="test"
-              name="firstName"
-              value={values.firstName}
+              name="first_name"
+              value={values.first_name}
               errors={errors}
               handleChange={handleChange}
               handleBlur={handleBlur}
@@ -104,8 +153,8 @@ export default function RegisterUser() {
             <InputField
               label="Last Name"
               type="text"
-              name="lastName"
-              value={values.lastName}
+              name="last_name"
+              value={values.last_name}
               errors={errors}
               handleChange={handleChange}
               handleBlur={handleBlur}
@@ -150,8 +199,8 @@ export default function RegisterUser() {
             <InputField
               label="Zip Code"
               type="text"
-              name="zipCode"
-              value={values.zipCode}
+              name="zip_code"
+              value={values.zip_code}
               errors={errors}
               handleChange={handleChange}
               handleBlur={handleBlur}
@@ -199,6 +248,7 @@ export default function RegisterUser() {
           <Box
             sx={{
               display: "flex",
+              justifyContent: "space-between",
             }}
           >
             <InputField
@@ -215,9 +265,7 @@ export default function RegisterUser() {
             <RadioGroup
               row
               name="gender"
-              sx={{
-                ml: 5.9,
-              }}
+              sx={{}}
               value={values.gender} // Add this line to bind the selected value
               onChange={handleChange} // Add this line to handle changes
             >
@@ -239,8 +287,8 @@ export default function RegisterUser() {
             <InputField
               label="Joining Date"
               type="text"
-              name="joiningDate"
-              value={values.joiningDate}
+              name="joining_date"
+              value={values.joining_date}
               errors={errors}
               handleChange={handleChange}
               handleBlur={handleBlur}
@@ -249,8 +297,8 @@ export default function RegisterUser() {
             <InputField
               label="Pan Card"
               type="text"
-              name="panCard"
-              value={values.panCard}
+              name="pan_card"
+              value={values.pan_card}
               errors={errors}
               handleChange={handleChange}
               handleBlur={handleBlur}
@@ -280,7 +328,9 @@ export default function RegisterUser() {
                 <MenuItem value="Team Lead">Team Lead</MenuItem>
                 <MenuItem value="Senior">Software Engineer</MenuItem>
                 <MenuItem value="Manager">Associate Engineer</MenuItem>
-                <MenuItem value="Junior Software Engineer">Junior Software Engineer</MenuItem>
+                <MenuItem value="Junior Software Engineer">
+                  Junior Software Engineer
+                </MenuItem>
                 <MenuItem value="TraineeEngineer">Trainee Engineer</MenuItem>
                 <MenuItem value="Intern">Intern</MenuItem>
               </Select>

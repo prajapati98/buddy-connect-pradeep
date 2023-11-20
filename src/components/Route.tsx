@@ -10,7 +10,6 @@ import PublicRoute from "./PublicRoute";
 import RegisterUser from "./RegisterUser";
 import UserList from "./UserList";
 
-
 interface AppLayoutProps {
   children: React.ReactNode;
 }

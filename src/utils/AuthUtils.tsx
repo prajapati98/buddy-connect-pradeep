@@ -16,7 +16,3 @@ export const isAuthenticated = () => {
 
   return false; // User is not authenticated or data is missing/invalid
 };
-
-
-
-

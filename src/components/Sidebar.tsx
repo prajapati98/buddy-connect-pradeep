@@ -14,12 +14,18 @@ import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
-import InboxIcon from "@mui/icons-material/MoveToInbox";
-import MailIcon from "@mui/icons-material/Mail";
+// import InboxIcon from "@mui/icons-material/MoveToInbox";
+// import MailIcon from "@mui/icons-material/Mail";
 import logo from "../assets/image/logo.png";
 import FeaturedPlayListIcon from "@mui/icons-material/FeaturedPlayList";
 import PersonIcon from "@mui/icons-material/Person";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
+import { Typography } from "@mui/material";
+import LogoutIcon from "@mui/icons-material/Logout";
+import { Button } from "@mui/material";
+import { logout } from "../features/login/loginSlice";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "../store";
 
 const drawerWidth = 240;
 
@@ -94,6 +100,7 @@ const Drawer = styled(MuiDrawer, {
 type MiniDrawerProps = {
   children: React.ReactNode;
 };
+
 export default function MiniDrawer({ children }: MiniDrawerProps) {
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
@@ -104,6 +111,14 @@ export default function MiniDrawer({ children }: MiniDrawerProps) {
 
   const handleDrawerClose = () => {
     setOpen(false);
+  };
+  const user = JSON.parse(localStorage.getItem("user") || "{}");
+  const dispatch = useDispatch<AppDispatch>();
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    dispatch(logout());
+    navigate("/login"); // Navigate to login Page
   };
 
   return (
@@ -123,6 +138,16 @@ export default function MiniDrawer({ children }: MiniDrawerProps) {
             <MenuIcon />
           </IconButton>
           <img src={logo} alt="logo" className="loginFromLogo" />
+          <Typography
+            sx={{
+              marginLeft: "auto",
+            }}
+          >
+            {user.first_name + " " + user.last_name}
+            <Button onClick={() => handleLogout()}>
+              <LogoutIcon sx={{ color: "#000" }} />
+            </Button>
+          </Typography>
         </Toolbar>
       </AppBar>
       <Drawer variant="permanent" open={open}>
