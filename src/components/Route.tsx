@@ -10,6 +10,7 @@ import PublicRoute from "./PublicRoute";
 import RegisterUser from "./RegisterUser";
 import UserList from "./UserList";
 import UserUpdate from "./UserUpdate";
+import UserInfoPage from "./UserInfoPage";
 
 interface AppLayoutProps {
   children: React.ReactNode;
@@ -74,6 +75,16 @@ const router = createBrowserRouter([
       <AppLayout>
         <Protected>
           <UserUpdate />
+        </Protected>
+      </AppLayout>
+    ),
+  },
+  {
+    path: "UserInfoPage/:id",
+    element: (
+      <AppLayout>
+        <Protected>
+          <UserInfoPage />
         </Protected>
       </AppLayout>
     ),

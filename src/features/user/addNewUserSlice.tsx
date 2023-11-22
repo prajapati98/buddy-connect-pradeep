@@ -1,4 +1,4 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { createSlice } from "@reduxjs/toolkit";
 import { action } from "./action";
 interface User {
   username: string;
@@ -8,22 +8,20 @@ interface userState {
   user: User | null;
   loading: boolean;
   isError: boolean;
+  errorMessage: null | string;
 }
 
 const initialState: userState = {
   user: null,
+  errorMessage: null,
   loading: false,
   isError: false,
 };
 
-
-
 const addNewUserSlice = createSlice({
   name: "user",
   initialState,
-  reducers: {
- 
-  },
+  reducers: {},
   extraReducers: (builder) => {
     builder
       .addCase(action.pending, (state) => {
@@ -35,9 +33,10 @@ const addNewUserSlice = createSlice({
         state.loading = false;
         state.isError = false;
       })
-      .addCase(action.rejected, (state) => {
+      .addCase(action.rejected, (state, action) => {
         state.loading = false;
         state.isError = true;
+        state.errorMessage = action.error.message || "Failed to insert user";
       });
   },
 });

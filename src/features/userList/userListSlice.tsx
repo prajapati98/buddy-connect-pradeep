@@ -8,19 +8,19 @@ interface userState {
   userList: UserList | null;
   loading: boolean;
   isError: boolean;
+  errorMessage: null | string;
 }
 
 const initialState: userState = {
   userList: null,
+  errorMessage: null,
   loading: false,
   isError: false,
 };
 const userListSlice = createSlice({
   name: "userList",
   initialState,
-  reducers: {
-
-  },
+  reducers: {},
   extraReducers: (builder) => {
     builder
       .addCase(action.pending, (state) => {
@@ -32,9 +32,10 @@ const userListSlice = createSlice({
         state.loading = false;
         state.isError = false;
       })
-      .addCase(action.rejected, (state) => {
+      .addCase(action.rejected, (state, action) => {
         state.loading = false;
         state.isError = true;
+        state.errorMessage = action.error.message || "Failed to get user";
       });
   },
 });

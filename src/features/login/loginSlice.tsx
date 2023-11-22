@@ -8,10 +8,12 @@ interface LoginState {
   user: User | null;
   loading: boolean;
   isError: boolean;
+  errorMessage: null | string;
 }
 
 const initialState: LoginState = {
   user: null,
+  errorMessage: null,
   loading: false,
   isError: false,
 };
@@ -22,10 +24,10 @@ export const login = createAsyncThunk(
     try {
       const response = await userInfo(credentials);
       localStorage.setItem("user", JSON.stringify(response.data.response));
-       window.location.reload(); 
+      window.location.reload();
       return response.data.response;
     } catch (error) {
-      throw new Error("Failed to login");
+      throw error;
     }
   }
 );
@@ -50,9 +52,10 @@ const loginSlice = createSlice({
         state.loading = false;
         state.isError = false;
       })
-      .addCase(login.rejected, (state) => {
+      .addCase(login.rejected, (state, action) => {
         state.loading = false;
         state.isError = true;
+        state.errorMessage = action.error.message || "Failed to login";
       });
   },
 });

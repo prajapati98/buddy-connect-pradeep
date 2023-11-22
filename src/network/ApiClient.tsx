@@ -14,8 +14,8 @@ axiosClient.interceptors.request.use(
 
     // Set the 'Authorization' header with the access token
     config.headers.Authorization = `Bearer ${hasAccessToken}`;
-    console.log(typeof config.data);
-    console.log("config.data instanceof", config.data instanceof FormData);
+
+    // console.log("config.data instanceof", config.data instanceof FormData);
     if (config.data instanceof FormData) {
       // Set the 'Content-Type' header for FormData explicitly
       config.headers["Content-Type"] = "multipart/form-data";
@@ -43,24 +43,24 @@ axiosClient.interceptors.response.use(
     return Promise.reject(response.data);
   },
   (error) => {
-    // console.error("Response error", error);
+    console.error("Response error", error);
 
     switch (error?.response?.status) {
       case 400:
-        return Promise.reject(error.response?.error);
+        return Promise.reject(error.response?.data);
       case 401:
-        return Promise.reject(error.response?.error);
+        return Promise.reject(error.response?.data);
 
       case 403:
-        return Promise.reject(error.response?.error);
+        return Promise.reject(error.response?.data);
 
       case 404:
-        return Promise.reject(error.response?.error);
+        return Promise.reject(error.response?.data);
 
       case 405:
-        return Promise.reject(error.response?.error);
+        return Promise.reject(error.response?.data);
       case 501:
-        return Promise.reject(error.response?.error);
+        return Promise.reject(error.response?.data);
       case 422:
         return Promise.reject(error.response?.data);
       default:

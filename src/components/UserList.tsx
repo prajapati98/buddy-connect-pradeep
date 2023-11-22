@@ -10,9 +10,23 @@ import { useEffect, useState } from "react";
 import { AppDispatch, RootState } from "../store";
 import { useDispatch, useSelector } from "react-redux";
 import { action } from "../features/userList/action";
-import { Button } from "@mui/material";
-import { DELETE_USER } from "../network/user";
+import { deleteUser, updateUserStatus } from "../network/user";
 import { Link } from "react-router-dom";
+import avatar from "../assets/image/avatar.jpg";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogTitle from "@mui/material/DialogTitle";
+import {
+  Avatar,
+  Box,
+  Button,
+  CircularProgress,
+  FormControlLabel,
+  Stack,
+  Switch,
+} from "@mui/material";
 
 interface UserListData {
   profile: string;
@@ -24,10 +38,12 @@ interface UserListData {
   Delete: string;
   id: string;
   last_name: string;
+  image: string;
+  status: string;
 }
 
 // Assuming UserList is an array type
-type UserList = UserListData[];
+type UserData = UserListData[];
 
 const UserList = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -37,65 +53,146 @@ const UserList = () => {
   }, [dispatch]);
 
   const [userListData, setUserListData] = useState<UserListData[]>([]);
-  const [userDelete, setUserDelete] = useState<string>();
+  const [userDelete, setUserDelete] = useState<string>("");
 
   useEffect(() => {
     // Assuming selectedState contains an array of data
     if (selectedState && Array.isArray(selectedState.userList)) {
-      // Update the type here
-      const filteredUserList = (selectedState.userList as UserList).filter(
-        (user) => user.id !== userDelete
-      );
-
-      setUserListData(filteredUserList);
+      setUserListData(selectedState.userList);
     }
   }, [selectedState, userDelete]);
 
-  const Deleteuser = (id: string) => {
+  const [dialogOpen, setDialogOpen] = React.useState(false);
+  const handleDelete = (id: string) => {
+    setDialogOpen(true);
     setUserDelete(id);
-    DELETE_USER(id);
   };
 
+  const handleConfirmDelete = () => {
+    if (userDelete !== "") {
+      deleteUser(userDelete);
+      if (selectedState && Array.isArray(selectedState.userList)) {
+        const filteredUserList = (selectedState.userList as UserData).filter(
+          (user) => user.id !== userDelete
+        );
+        setUserListData(filteredUserList);
+      }
+    }
+    handleClose();
+  };
+
+  const handleClose = () => {
+    setDialogOpen(false);
+  };
+
+  const [checked, setChecked] = React.useState(false);
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setChecked(event.target.checked);
+    console.log(event.target.checked, "event.target.checked");
+    console.log(event.target.id);
+  };
+
+  if (userListData.length === 0 && selectedState.loading) {
+    return (
+      <Box
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          height: "100vh",
+        }}
+      >
+        <CircularProgress />
+      </Box>
+    );
+  }
   return (
     <TableContainer component={Paper}>
       <Table sx={{ minWidth: 650 }} aria-label="simple table">
         <TableHead>
           <TableRow>
-            <TableCell>Fullname</TableCell>
+            <TableCell>Profile</TableCell>
+            <TableCell>Full Name</TableCell>
             <TableCell>Email</TableCell>
             <TableCell>Designation</TableCell>
             <TableCell>View</TableCell>
             <TableCell>Update</TableCell>
             <TableCell>Delete</TableCell>
+            <TableCell>Active / Deactivate</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
           {userListData.map((row) => (
             <TableRow key={row.id}>
-              <TableCell>{`${row.first_name} ${row.last_name}`}</TableCell>
+              <TableCell>
+                <Stack direction="row" spacing={2}>
+                  <Avatar
+                    alt="Remy Sharp"
+                    src={`${row?.image || avatar}`}
+                    sx={{ width: 50, height: 50 }}
+                  />
+                </Stack>
+              </TableCell>
+              <TableCell>{`${row.first_name} ${row.last_name} `}</TableCell>
               <TableCell>{row.email}</TableCell>
               <TableCell>{row.designation}</TableCell>
               <TableCell>
-                <Button variant="contained">View</Button>
+                <Link to={`/UserInfoPage/${row.id}`}>
+                  <Button variant="contained">View</Button>
+                </Link>
               </TableCell>
               <TableCell>
-                <Button variant="contained" color="warning">
-                  <Link to={`/UserUpdate/${row.id}`}>Update</Link>
-                </Button>
+                <Link to={`/UserUpdate/${row.id}`}>
+                  <Button variant="contained" color="warning">
+                    Update
+                  </Button>
+                </Link>
               </TableCell>
               <TableCell>
                 <Button
                   variant="contained"
                   color="error"
-                  onClick={() => Deleteuser(row.id)}
+                  onClick={() => handleDelete(row.id)}
                 >
                   Delete
                 </Button>
+              </TableCell>
+              <TableCell>
+                <FormControlLabel
+                  control={
+                    <Switch
+                      sx={{ m: 1 }}
+                      checked={checked}
+                      inputProps={{ "aria-label": "controlled" }}
+                      onChange={handleChange}
+                      id={row.id}
+                    />
+                  }
+                  label={row.status === "active" ? "Active" : "Deactivate"}
+                />
               </TableCell>
             </TableRow>
           ))}
         </TableBody>
       </Table>
+      <Box>
+        <Dialog open={dialogOpen} onClose={handleClose} maxWidth="xs">
+          <DialogTitle>Delete Confirmation</DialogTitle>
+          <DialogContent>
+            <DialogContentText>
+              Are you sure you want to delete this user?
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleClose} color="primary">
+              Cancel
+            </Button>
+            <Button onClick={handleConfirmDelete} color="primary">
+              DELETE
+            </Button>
+          </DialogActions>
+        </Dialog>
+      </Box>
     </TableContainer>
   );
 };

@@ -3,11 +3,13 @@ import { action } from "./action";
 
 interface userState {
   singleUserData: null | [];
+  errorMessage: null | string;
   loading: boolean;
   isError: boolean;
 }
 
 const initialState: userState = {
+  errorMessage: null,
   singleUserData: null,
   loading: false,
   isError: false,
@@ -27,9 +29,11 @@ const singleUserSlice = createSlice({
         state.loading = false;
         state.isError = false;
       })
-      .addCase(action.rejected, (state) => {
+      .addCase(action.rejected, (state, action) => {
         state.loading = false;
         state.isError = true;
+        state.errorMessage =
+          action.error.message || "Failed to get single user";
       });
   },
 });

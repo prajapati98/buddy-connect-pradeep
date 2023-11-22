@@ -26,6 +26,11 @@ import { Button } from "@mui/material";
 import { logout } from "../features/login/loginSlice";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "../store";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogTitle from "@mui/material/DialogTitle";
 
 const drawerWidth = 240;
 
@@ -116,11 +121,21 @@ export default function MiniDrawer({ children }: MiniDrawerProps) {
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
 
+  const [dialogOpen, setDialogOpen] = React.useState(false);
+
   const handleLogout = () => {
-    dispatch(logout());
-    navigate("/login"); // Navigate to login Page
+    setDialogOpen(true);
   };
 
+  const handleConfirmLogout = () => {
+    dispatch(logout());
+    navigate("/login");
+    handleClose();
+  };
+
+  const handleClose = () => {
+    setDialogOpen(false);
+  };
   return (
     <Box sx={{ display: "flex" }}>
       <AppBar position="fixed" open={open}>
@@ -202,6 +217,25 @@ export default function MiniDrawer({ children }: MiniDrawerProps) {
       <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
         <DrawerHeader />
         {children}
+      </Box>
+      <Box>
+        <Button onClick={handleLogout}>Logout</Button>
+        <Dialog open={dialogOpen} onClose={handleClose} maxWidth="xs">
+          <DialogTitle>Logout Confirmation</DialogTitle>
+          <DialogContent>
+            <DialogContentText>
+              Are you sure you want to log out?
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleClose} color="primary">
+              Cancel
+            </Button>
+            <Button onClick={handleConfirmLogout} color="primary">
+              Logout
+            </Button>
+          </DialogActions>
+        </Dialog>
       </Box>
     </Box>
   );

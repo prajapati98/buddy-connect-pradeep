@@ -2,7 +2,7 @@ import * as React from "react";
 import { useFormik } from "formik";
 import Box from "@mui/material/Box";
 import InputField from "./InputField";
-import { Typography } from "@mui/material";
+import { Alert, Typography } from "@mui/material";
 import BtnSubmit from "./BtnSubmit";
 import Radio from "@mui/material/Radio";
 import RadioGroup from "@mui/material/RadioGroup";
@@ -12,8 +12,8 @@ import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
 import { registerSchema } from "../schemas/registerSchema";
-import { AppDispatch } from "../store";
-import { useDispatch } from "react-redux";
+import { AppDispatch, RootState } from "../store";
+import { useDispatch, useSelector } from "react-redux";
 import { action } from "../features/user/action";
 import { useNavigate } from "react-router-dom";
 
@@ -74,9 +74,16 @@ export default function RegisterUser() {
     validationSchema: registerSchema,
     onSubmit: (values, { setSubmitting }) => {
       dispatch(action(values));
-      navigate("/user-list");
+      setSubmitting(false);
     },
   });
+  const selectedState = useSelector((state: RootState) => state.user);
+  if (selectedState.user) {
+    setTimeout(() => {
+      // Navigate to "/user-list" after 2 seconds
+      navigate("/user-list");
+    }, 2000);
+  }
 
   return (
     <Box display="flex" flexDirection="column" alignItems="center">
@@ -338,6 +345,21 @@ export default function RegisterUser() {
           </Box>
           <BtnSubmit btnName="Register" />
         </form>
+        {selectedState.isError ? (
+          <Alert
+            variant="filled"
+            severity="error"
+            sx={{
+              marginTop: 2,
+            }}
+          >
+            {selectedState.errorMessage}
+          </Alert>
+        ) : (
+          selectedState.user && (
+            <Alert severity="success">Registered successfully</Alert>
+          )
+        )}
       </Box>
     </Box>
   );

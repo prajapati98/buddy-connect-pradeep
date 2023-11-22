@@ -2,7 +2,7 @@ import * as React from "react";
 import { useFormik } from "formik";
 import Box from "@mui/material/Box";
 import InputField from "./InputField";
-import { Typography } from "@mui/material";
+import { Alert, Typography } from "@mui/material";
 import BtnSubmit from "./BtnSubmit";
 import Radio from "@mui/material/Radio";
 import RadioGroup from "@mui/material/RadioGroup";
@@ -14,11 +14,11 @@ import Select from "@mui/material/Select";
 import { registerSchema } from "../schemas/registerSchema";
 import { AppDispatch, RootState } from "../store";
 import { useDispatch, useSelector } from "react-redux";
-import { action } from "../features/user/action";
+// import { action } from "../features/user/action";
 import { action as singleUser } from "../features/ singleUser /action";
 import { useEffect } from "react";
 import CircularProgress from "@mui/material/CircularProgress";
-
+import { updatePersonalDetail } from "../network/user";
 import { useNavigate, useParams } from "react-router-dom";
 
 export default function UserUpdate() {
@@ -38,19 +38,23 @@ export default function UserUpdate() {
     designation: string;
     email: string;
     role: string;
+    status: string;
   }
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
   const [selectedUserData, setSelectedUserData] =
     React.useState<FormData | null>(null);
   const { id } = useParams();
+  const userId = id ? parseInt(id) : undefined;
+
+  const [error, setError] = React.useState("");
+  const [success, setSuccess] = React.useState<boolean>(false);
 
   useEffect(() => {
-    if (id) {
-      const userId = parseInt(id);
+    if (userId !== undefined) {
       dispatch(singleUser(userId));
     }
-  }, [id]);
+  }, [userId, dispatch]);
 
   const selectedState = useSelector((state: RootState) => state.singleUserData);
 
@@ -62,10 +66,6 @@ export default function UserUpdate() {
         : (selectedState.singleUserData as unknown as FormData)
     );
   }, [selectedState.singleUserData]);
-
-  // const userEmail = selectedUserData?.email;
-  console.log(selectedUserData?.gender);
-  // setSelectedUserData(selectedState.singleUserData);
   enum Gender {
     Male = "male",
     Female = "female",
@@ -87,6 +87,7 @@ export default function UserUpdate() {
     joining_date: selectedUserData?.joining_date || "",
     pan_card: selectedUserData?.pan_card || "",
     designation: selectedUserData?.designation || "",
+    status: selectedUserData?.status || "",
   };
   const {
     handleChange,
@@ -101,24 +102,29 @@ export default function UserUpdate() {
     initialValues: initialValues,
     validationSchema: registerSchema,
 
-    onSubmit: (values, { setSubmitting }) => {
-      dispatch(action(values));
-      navigate("/user-list");
+    onSubmit: async (values, { setSubmitting }) => {
+      try {
+        if (userId !== undefined) {
+          const response = await updatePersonalDetail(values, userId);
+          if (response.status === 200) {
+            setSuccess(true);
+            setTimeout(() => {
+              // Navigate to "/user-list" after 2 seconds
+              navigate("/user-list");
+            }, 2000);
+            setError("");
+          }
+        } else {
+          console.error("User ID is undefined");
+        }
+      } catch (error: any) {
+        setError(error.message);
+        console.error("An unknown error occurred:", error);
+      } finally {
+        setSubmitting(false);
+      }
     },
   });
-  console.log("my value", values);
-  if (selectedState.loading) {
-    <Box
-      sx={{
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-      }}
-    >
-      {" "}
-      <CircularProgress />
-    </Box>;
-  }
   if (selectedState.loading) {
     return (
       <Box
@@ -128,11 +134,11 @@ export default function UserUpdate() {
           justifyContent: "center",
         }}
       >
-        {" "}
         <CircularProgress />
       </Box>
     );
   }
+
   if (selectedState.isError) {
     return (
       <Box
@@ -143,7 +149,7 @@ export default function UserUpdate() {
         }}
       >
         {" "}
-        <Typography>error</Typography>
+        <Typography>{selectedState.errorMessage}</Typography>
       </Box>
     );
   }
@@ -170,6 +176,7 @@ export default function UserUpdate() {
               justifyContent: "space-between",
             }}
           >
+            <input type="hidden" name="status" value={values.status} />
             <InputField
               label="Email"
               type="email"
@@ -414,6 +421,20 @@ export default function UserUpdate() {
           </Box>
           <BtnSubmit btnName="Register" />
         </form>
+        {error === "" ? (
+          ""
+        ) : (
+          <Alert
+            variant="filled"
+            severity="error"
+            sx={{
+              marginTop: 2,
+            }}
+          >
+            {error}
+          </Alert>
+        )}
+        {success ? <Alert severity="success">updated successfully</Alert> : ""}
       </Box>
     </Box>
   );

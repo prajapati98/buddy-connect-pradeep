@@ -7,6 +7,9 @@ export const USER_ENDPOINT = {
   IMAGE_UPLOAD: `${apiPrefix}/user/userImageUpload.php`,
   DELETE_USER: `${apiPrefix}/user/deleteUser.php`,
   GET_SINGLE_USER: `${apiPrefix}/user/getPersonalDetail.php`,
+  UPDATE_SINGLE_USER: `${apiPrefix}/user/updatePersonalDetail.php`,
+  UPDATE_USER_STATUS: `${apiPrefix}/user/userStatus.php
+`,
 
   //FETCH_ALL_HISTORY: `${apiPrefix}/history.php`,
   // AUTH_CONFIRM_PHONE: `${apiPrefix}/Auth/ConfirmPhone`,
