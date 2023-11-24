@@ -6,6 +6,7 @@ import {
   Alert,
   Stack,
   Avatar,
+  Button,
 } from "@mui/material";
 import { useParams } from "react-router-dom";
 import { action as singleUser } from "../features/ singleUser /action";
@@ -16,6 +17,7 @@ import Tab from "@mui/material/Tab";
 import TabContext from "@mui/lab/TabContext";
 import TabList from "@mui/lab/TabList";
 import TabPanel from "@mui/lab/TabPanel";
+import AddFamilyFrom from "./AddFamilyFrom";
 
 const UserInfoPage: React.FC = () => {
   enum Gender {
@@ -116,7 +118,7 @@ const UserInfoPage: React.FC = () => {
         }}
       >
         <Avatar
-          alt="Remy Sharp"
+          alt="avatar"
           src={`${selectedUserData?.image || avatar}`}
           sx={{ width: 150, height: 150 }}
         />
@@ -218,7 +220,7 @@ const UserInfoPage: React.FC = () => {
           </TabPanel>
           <TabPanel value="Family">
             {/* Content for Family Information tab */}
-            Item Two
+            <AddFamilyFrom userId={userId} />
           </TabPanel>
           <TabPanel value="Bank">
             {/* Content for Bank Detail tab */}

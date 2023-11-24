@@ -66,6 +66,7 @@ export default function UserUpdate() {
         : (selectedState.singleUserData as unknown as FormData)
     );
   }, [selectedState.singleUserData]);
+
   enum Gender {
     Male = "male",
     Female = "female",
@@ -197,22 +198,17 @@ export default function UserUpdate() {
               <Select
                 labelId="select-role"
                 id="simple-select"
-                value={values.role || "superAdmin"}
+                value={values.role}
                 label="Role"
                 defaultValue={selectedUserData?.role}
                 onChange={(event) =>
                   setFieldValue("role", event.target.value as string)
                 }
               >
-                <MenuItem
-                  value="superAdmin"
-                  selected={values.role === "superAdmin"}
-                >
-                  superAdmin
-                </MenuItem>
-                <MenuItem value="admin">admin</MenuItem>
-                <MenuItem value="hr">hr</MenuItem>
-                <MenuItem value="associate">associate</MenuItem>
+                <MenuItem value="superAdmin">Super Admin</MenuItem>
+                <MenuItem value="admin">Admin</MenuItem>
+                <MenuItem value="hr">HR</MenuItem>
+                <MenuItem value="associate">Associate</MenuItem>
               </Select>
             </FormControl>
           </Box>
@@ -419,7 +415,7 @@ export default function UserUpdate() {
               </Select>
             </FormControl>
           </Box>
-          <BtnSubmit btnName="Register" />
+          <BtnSubmit btnName="Update" />
         </form>
         {error === "" ? (
           ""

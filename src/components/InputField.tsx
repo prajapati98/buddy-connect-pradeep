@@ -18,13 +18,14 @@ const InputField: React.FC<FormFieldProps> = (props) => {
       }}
     >
       <TextField
-        {...rest}
         variant="outlined"
         margin="normal"
         fullWidth
         className="block-input"
         onChange={handleChange}
         onBlur={handleBlur}
+        size="small"
+        {...rest}
       />
       {errors[rest.name as string] && touched[rest.name as string] && (
         <span

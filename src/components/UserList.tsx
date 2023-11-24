@@ -46,6 +46,8 @@ interface UserListData {
 type UserData = UserListData[];
 
 const UserList = () => {
+  const [error, setError] = React.useState("");
+
   const dispatch = useDispatch<AppDispatch>();
   const selectedState = useSelector((state: RootState) => state.userList);
   useEffect(() => {
@@ -68,9 +70,17 @@ const UserList = () => {
     setUserDelete(id);
   };
 
-  const handleConfirmDelete = () => {
+  const handleConfirmDelete = async () => {
     if (userDelete !== "") {
-      deleteUser(userDelete);
+      try {
+        const response = await deleteUser(userDelete);
+        if (response.status === 200) {
+          setError("");
+        }
+      } catch (error: any) {
+        setError(error.message);
+        console.log(error);
+      }
       if (selectedState && Array.isArray(selectedState.userList)) {
         const filteredUserList = (selectedState.userList as UserData).filter(
           (user) => user.id !== userDelete
@@ -85,11 +95,26 @@ const UserList = () => {
     setDialogOpen(false);
   };
 
-  const [checked, setChecked] = React.useState(false);
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setChecked(event.target.checked);
-    console.log(event.target.checked, "event.target.checked");
-    console.log(event.target.id);
+  const handleSwitchChange = async (
+    event: React.ChangeEvent<HTMLInputElement>,
+    userId: string,
+    currentStatus: string
+  ) => {
+    const newStatus: string = event.target.checked ? "active" : "deActive";
+    try {
+      const response = await updateUserStatus(newStatus, userId);
+      if (response.status === 200) {
+        setError("");
+        setUserListData((prevUserListData) => {
+          return prevUserListData.map((user) =>
+            user.id === userId ? { ...user, status: newStatus } : user
+          );
+        });
+      }
+    } catch (error: any) {
+      setError(error.message);
+      console.log("update user Status", error);
+    }
   };
 
   if (userListData.length === 0 && selectedState.loading) {
@@ -127,7 +152,7 @@ const UserList = () => {
               <TableCell>
                 <Stack direction="row" spacing={2}>
                   <Avatar
-                    alt="Remy Sharp"
+                    alt="Avatar"
                     src={`${row?.image || avatar}`}
                     sx={{ width: 50, height: 50 }}
                   />
@@ -162,13 +187,15 @@ const UserList = () => {
                   control={
                     <Switch
                       sx={{ m: 1 }}
-                      checked={checked}
                       inputProps={{ "aria-label": "controlled" }}
-                      onChange={handleChange}
+                      checked={row.status === "active"}
+                      onChange={(event) =>
+                        handleSwitchChange(event, row.id, row.status)
+                      }
                       id={row.id}
                     />
                   }
-                  label={row.status === "active" ? "Active" : "Deactivate"}
+                  label=""
                 />
               </TableCell>
             </TableRow>

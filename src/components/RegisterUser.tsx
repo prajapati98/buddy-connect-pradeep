@@ -120,7 +120,7 @@ export default function RegisterUser() {
             />
             <FormControl
               sx={{
-                width: "42%",
+                width: "46%",
               }}
             >
               <InputLabel id="select-role">Designation</InputLabel>

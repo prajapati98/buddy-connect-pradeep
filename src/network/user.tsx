@@ -41,8 +41,11 @@ export const deleteUser = (id: string) => {
 export const updatePersonalDetail = (payload: any, id: number) => {
   return putRequest(`${USER_ENDPOINT.UPDATE_SINGLE_USER}?id=${id}`, payload);
 };
-export const updateUserStatus = (payload: any, id: number) => {
-  return patchRequest(`${USER_ENDPOINT.UPDATE_USER_STATUS}`, payload);
+export const updateUserStatus = (payload: any, id: string) => {
+  return patchRequest(
+    `${USER_ENDPOINT.UPDATE_USER_STATUS}?user_id=${id}`,
+    payload
+  );
 };
 // export const getVehicleTypes = () => {
 //   return getRequest(USER_ENDPOINT.VEHICLE_TYPES);
