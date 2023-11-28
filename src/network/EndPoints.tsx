@@ -8,13 +8,8 @@ export const USER_ENDPOINT = {
   DELETE_USER: `${apiPrefix}/user/deleteUser.php`,
   GET_SINGLE_USER: `${apiPrefix}/user/getPersonalDetail.php`,
   UPDATE_SINGLE_USER: `${apiPrefix}/user/updatePersonalDetail.php`,
-  UPDATE_USER_STATUS: `${apiPrefix}/user/userStatus.php
-`,
-
-  //FETCH_ALL_HISTORY: `${apiPrefix}/history.php`,
-  // AUTH_CONFIRM_PHONE: `${apiPrefix}/Auth/ConfirmPhone`,
-  // USER_INFO: `${apiPrefix}/Auth/UserInfo`,
-  // VEHICLE_TYPES: `${apiPrefix}/Lib/VehicleTypes`,
-  // UPDATE_PHONE: `${apiPrefix}/Auth/ChangePhone`,
-  // CANCEL_ORDER: `${apiPrefix}/Orders/Cancel`,
+  UPDATE_USER_STATUS: `${apiPrefix}/user/userStatus.php`,
+  ADD_FAMILY_MEMBER: `${apiPrefix}/family/addFamilyDetail.php`,
+  GET_FAMILY_MEMBERS: `${apiPrefix}/family/getFamilyDetails.php`,
+  DELETE_FAMILY_MEMBER: `${apiPrefix}/family/deleteFamilyDetail.php`,
 };

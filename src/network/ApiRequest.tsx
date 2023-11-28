@@ -19,9 +19,3 @@ export const deleteRequest = (url: string) => {
 export const patchRequest = (url: string, payload: string) => {
   return axiosClient.patch(url, { status: payload });
 };
-
-// export const patchDownloadRequest = (url, payload) => {
-//   return axiosClient.patch(url, payload, {
-//     responseType: "blob",
-//   });
-// };

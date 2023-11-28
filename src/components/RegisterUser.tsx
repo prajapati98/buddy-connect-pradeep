@@ -122,13 +122,14 @@ export default function RegisterUser() {
               sx={{
                 width: "46%",
               }}
+              size="small"
             >
-              <InputLabel id="select-role">Designation</InputLabel>
+              <InputLabel id="select-role">Role</InputLabel>
               <Select
                 labelId="select-role"
                 id="demo-simple-select"
                 value={values.role}
-                label="Designation"
+                label="Role"
                 onChange={(event) =>
                   setFieldValue("role", event.target.value as string)
                 }
@@ -320,7 +321,7 @@ export default function RegisterUser() {
               justifyContent: "space-between",
             }}
           >
-            <FormControl fullWidth>
+            <FormControl fullWidth size="small">
               <InputLabel id="demo-simple-select-label">Designation</InputLabel>
               <Select
                 labelId="demo-simple-select-label"

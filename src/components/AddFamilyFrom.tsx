@@ -4,14 +4,13 @@ import { styled } from "@mui/material/styles";
 import Dialog from "@mui/material/Dialog";
 import DialogTitle from "@mui/material/DialogTitle";
 import DialogContent from "@mui/material/DialogContent";
-import DialogActions from "@mui/material/DialogActions";
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
 import { useFormik } from "formik";
-import Typography from "@mui/material/Typography";
 import AddIcon from "@mui/icons-material/Add";
 import InputField from "./InputField";
 import {
+  Alert,
   Box,
   FormControl,
   FormControlLabel,
@@ -23,6 +22,7 @@ import {
 import MenuItem from "@mui/material/MenuItem";
 import BtnSubmit from "./BtnSubmit";
 import { familyRegisterSchema } from "../schemas/familyRegisterSchema";
+import { AddFamilyMember } from "../network/user";
 enum Gender {
   Male = "male",
   Female = "female",
@@ -33,6 +33,7 @@ export interface FormData {
   relation: string;
   contact: string;
   dob: string;
+  address: string;
   gender: Gender.Male;
 }
 
@@ -44,15 +45,25 @@ const BootstrapDialog = styled(Dialog)(({ theme }) => ({
     padding: theme.spacing(1),
   },
 }));
+interface ApiResponse {
+  success: boolean;
+  message: string;
+  response: {
+    id: string;
+    user_id: string;
+  };
+}
 interface AddFamilyFormProps {
   userId: number | undefined;
+  onSuccess: () => void; // Add this prop
 }
-const AddFamilyFrom: React.FC<AddFamilyFormProps> = ({ userId }) => {
+const AddFamilyFrom: React.FC<AddFamilyFormProps> = ({ userId, onSuccess }) => {
   const [open, setOpen] = React.useState(false);
+  const [res, setRes] = React.useState<ApiResponse | undefined>();
   const relationOptions = [
     { value: "father", label: "Father" },
     { value: "mother", label: "Mother" },
-    { value: "brother", label: "Senior Software Engineer" },
+    { value: "brother", label: "Brother" },
     { value: "sister", label: "Sister" },
     { value: "spouse", label: "Spouse" },
     { value: "son", label: "Son" },
@@ -63,12 +74,14 @@ const AddFamilyFrom: React.FC<AddFamilyFormProps> = ({ userId }) => {
     setOpen(true);
   };
   const handleClose = () => {
+    resetForm();
     setOpen(false);
   };
 
   const initialValues: FormData = {
     name: "",
     relation: "",
+    address: "",
     contact: "",
     dob: "",
     gender: Gender.Male,
@@ -82,41 +95,44 @@ const AddFamilyFrom: React.FC<AddFamilyFormProps> = ({ userId }) => {
     values,
     errors,
     touched,
+    resetForm,
   } = useFormik({
-    // enableReinitialize: selectedUserData ? true : false,
     initialValues: initialValues,
     validationSchema: familyRegisterSchema,
 
     onSubmit: async (values, { setSubmitting }) => {
-      //   try {
-      //     if (userId) {
-      //       const response = await updatePersonalDetail(values, userId);
-      //       if (response.status === 200) {
-      //         setSuccess(true);
-      //         setTimeout(() => {
-      //           // Navigate to "/user-list" after 2 seconds
-      //           navigate("/user-list");
-      //         }, 2000);
-      //         setError("");
-      //       }
-      //     } else {
-      //       console.error("User ID is undefined");
-      //     }
-      //   } catch (error: any) {
-      //     setError(error.message);
-      //     console.error("An unknown error occurred:", error);
-      //   } finally {
-      //     setSubmitting(false);
-      //   }
+      try {
+        if (userId) {
+          const response = await AddFamilyMember(values, userId);
+          const responseData = response.data;
+          setRes(responseData);
+
+          if (response.data.success) {
+            onSuccess();
+            setTimeout(() => {
+              handleClose();
+              setRes(undefined);
+            }, 2000);
+          }
+        } else {
+          console.error("User ID is undefined");
+        }
+      } catch (error: any) {
+        console.error("An unknown error occurred:", error);
+      } finally {
+        setSubmitting(false);
+      }
     },
   });
-
   return (
     <Box>
       <Button
         variant="contained"
         onClick={handleClickOpen}
         startIcon={<AddIcon />}
+        sx={{
+          mb: 2.2,
+        }}
       >
         Add Family Member
       </Button>
@@ -143,8 +159,8 @@ const AddFamilyFrom: React.FC<AddFamilyFormProps> = ({ userId }) => {
           >
             <CloseIcon />
           </IconButton>
-          <form onSubmit={handleSubmit}>
-            <DialogContent dividers>
+          <DialogContent dividers>
+            <form onSubmit={handleSubmit}>
               <InputField
                 label="Name"
                 type="text"
@@ -175,6 +191,16 @@ const AddFamilyFrom: React.FC<AddFamilyFormProps> = ({ userId }) => {
                 handleBlur={handleBlur}
                 touched={touched}
               />
+              <InputField
+                label="Address"
+                type="text"
+                name="address"
+                value={values.address}
+                errors={errors}
+                handleChange={handleChange}
+                handleBlur={handleBlur}
+                touched={touched}
+              />
               <RadioGroup
                 row
                 name="gender"
@@ -196,7 +222,9 @@ const AddFamilyFrom: React.FC<AddFamilyFormProps> = ({ userId }) => {
               <FormControl
                 size="small"
                 sx={{
-                  marginTop: "16px",
+                  mt: "16px",
+                  mb: "16px",
+                  position: "relative",
                 }}
                 fullWidth
               >
@@ -204,6 +232,7 @@ const AddFamilyFrom: React.FC<AddFamilyFormProps> = ({ userId }) => {
                 <Select
                   labelId="relation"
                   id="relation-select"
+                  name="relation"
                   value={values.relation}
                   label="Relation"
                   onChange={(event) =>
@@ -216,24 +245,41 @@ const AddFamilyFrom: React.FC<AddFamilyFormProps> = ({ userId }) => {
                     </MenuItem>
                   ))}
                 </Select>
-                {errors.name && touched.name && (
+                {errors.relation && touched.relation && (
                   <span
                     style={{
                       color: "#d32f2f",
                       fontSize: "12px",
                       position: "absolute",
                       width: "100%",
-                      bottom: "-15px",
+                      bottom: "-22px",
                       left: 0,
                     }}
                   >
-                    {errors.name}
+                    {errors.relation}
                   </span>
                 )}
               </FormControl>
               <BtnSubmit btnName="Add Member" />
-            </DialogContent>
-          </form>
+              {res !== undefined && (
+                <Box>
+                  {res?.success ? (
+                    <Alert severity="success">{res?.message}</Alert>
+                  ) : (
+                    <Alert
+                      variant="filled"
+                      severity="error"
+                      sx={{
+                        marginTop: 2,
+                      }}
+                    >
+                      {res?.message}
+                    </Alert>
+                  )}
+                </Box>
+              )}
+            </form>
+          </DialogContent>
         </Box>
       </BootstrapDialog>
     </Box>

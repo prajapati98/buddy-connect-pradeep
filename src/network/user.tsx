@@ -7,17 +7,6 @@ import {
 } from "./ApiRequest";
 import { USER_ENDPOINT } from "./EndPoints";
 
-// export const fetchAllProducts = () => {
-//   return getRequest(USER_ENDPOINT.FETCH_ALL_PROFUCT);
-// };
-
-// export const fetchAllHistory = () => {
-//   return getRequest(USER_ENDPOINT.FETCH_ALL_HISTORY);
-// };
-// export const authConfirmPhone = (payload) => {
-//   return postRequest(USER_ENDPOINT.AUTH_CONFIRM_PHONE + `?code=${payload}`);
-// };
-
 export const getUserList = () => {
   return getRequest(USER_ENDPOINT.USER_LIST);
 };
@@ -31,8 +20,8 @@ export const userInfo = (payload: any) => {
 export const registerUser = (payload: any) => {
   return postRequest(USER_ENDPOINT.REGISTER_USER, payload);
 };
-export const IMAGE_UPLOAD = (payload: any) => {
-  return postRequest(USER_ENDPOINT.IMAGE_UPLOAD, payload);
+export const UploadImage = (payload: any, id: number) => {
+  return postRequest(`${USER_ENDPOINT.IMAGE_UPLOAD}?id=${id}`, payload);
 };
 export const deleteUser = (id: string) => {
   return deleteRequest(`${USER_ENDPOINT.DELETE_USER}?user_id=${id}`);
@@ -47,10 +36,20 @@ export const updateUserStatus = (payload: any, id: string) => {
     payload
   );
 };
-// export const getVehicleTypes = () => {
-//   return getRequest(USER_ENDPOINT.VEHICLE_TYPES);
-// };
-
-// export const updatePhone = (payload) => {
-//   return postRequest(`${USER_ENDPOINT.UPDATE_PHONE}?phone=${payload.phone}`);
-// };
+export const AddFamilyMember = (payload: any, id: number) => {
+  return postRequest(
+    `${USER_ENDPOINT.ADD_FAMILY_MEMBER}?user_id=${id}`,
+    payload
+  );
+};
+export const GetFamilyMembers = (id: number | undefined) => {
+  return getRequest(`${USER_ENDPOINT.GET_FAMILY_MEMBERS}?user_id=${id}`);
+};
+export const DeleteFamilyMembers = (
+  id: number | undefined,
+  family_id: number | undefined
+) => {
+  return deleteRequest(
+    `${USER_ENDPOINT.DELETE_FAMILY_MEMBER}?user_id=${id}&family_id=${family_id}`
+  );
+};

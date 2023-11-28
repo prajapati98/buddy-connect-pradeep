@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, ChangeEvent } from "react";
 import {
   Typography,
   Box,
@@ -18,6 +18,11 @@ import TabContext from "@mui/lab/TabContext";
 import TabList from "@mui/lab/TabList";
 import TabPanel from "@mui/lab/TabPanel";
 import AddFamilyFrom from "./AddFamilyFrom";
+import FamilyList from "./FamilyList";
+import CameraAltIcon from "@mui/icons-material/CameraAlt";
+import { UploadImage } from "../network/user";
+import { styled } from "@mui/material/styles";
+import { IMGURL } from "./PrefixUrl";
 
 const UserInfoPage: React.FC = () => {
   enum Gender {
@@ -44,6 +49,14 @@ const UserInfoPage: React.FC = () => {
     image: string;
     message: string;
   }
+  interface ApiResponse {
+    success: boolean;
+    message: string;
+    response: {
+      id: string;
+      user_id: string;
+    };
+  }
   const [selectedUserData, setSelectedUserData] =
     React.useState<FormData | null>(null);
   const { id } = useParams();
@@ -61,7 +74,43 @@ const UserInfoPage: React.FC = () => {
   const handleChange = (event: React.SyntheticEvent, newValue: string) => {
     setValue(newValue);
   };
+  const [familyTableUpdate, setFamilyTableUpdate] = React.useState<number>(0);
+  const [responseValue, setResponseValue] = React.useState<
+    ApiResponse | undefined
+  >();
+  const allowedExtensions = ["jpg", "jpeg", "png", "gif"];
 
+  const handleFamilyUpdate = () => {
+    // Increment the state to trigger a re-render and update the FamilyList component
+    setFamilyTableUpdate((prev) => prev + 1);
+  };
+  const handleFileUpload = async (event: ChangeEvent<HTMLInputElement>) => {
+    try {
+      if (userId) {
+        const files = event.target.files;
+        if (files && files.length > 0) {
+          const fileName = files[0].name;
+          if (isFileValid(fileName)) {
+            let formData = new FormData();
+            formData.append("image", files[0]);
+
+            const response = await UploadImage(formData, userId);
+          } else {
+            console.error(
+              "Invalid file type. Please upload a JPG, JPEG, PNG, or GIF file."
+            );
+          }
+        } else {
+          console.error("No files selected");
+        }
+      } else {
+        console.error("User ID is undefined");
+      }
+    } catch (error: any) {
+      setResponseValue(error);
+      console.error("An unknown error occurred:", error.message);
+    }
+  };
   useEffect(() => {
     // Handle the case where it's an array or null
     setSelectedUserData(
@@ -83,6 +132,17 @@ const UserInfoPage: React.FC = () => {
       </Box>
     );
   }
+  const VisuallyHiddenInput = styled("input")({
+    clip: "rect(0 0 0 0)",
+    clipPath: "inset(50%)",
+    height: 1,
+    overflow: "hidden",
+    position: "absolute",
+    bottom: 0,
+    left: 0,
+    whiteSpace: "nowrap",
+    width: 1,
+  });
   if (selectedState.isError) {
     return (
       <Box
@@ -117,11 +177,65 @@ const UserInfoPage: React.FC = () => {
           flexDirection: "column",
         }}
       >
-        <Avatar
-          alt="avatar"
-          src={`${selectedUserData?.image || avatar}`}
-          sx={{ width: 150, height: 150 }}
-        />
+        <Box
+          sx={{
+            position: "relative",
+          }}
+        >
+          <Avatar
+            alt="avatar"
+            src={`${IMGURL}${selectedUserData?.image || avatar}`}
+            sx={{ width: 150, height: 150 }}
+          />
+
+          <Button
+            style={{
+              position: "absolute",
+              bottom: "0",
+              right: "0",
+            }}
+            component="label"
+            variant="text"
+            startIcon={
+              <CameraAltIcon
+                sx={{
+                  zIndex: 1,
+                  fontSize: "32px",
+                  color: "#2196f3",
+                  cursor: "pointer",
+                  ":hover": { color: "#1769aa" },
+                }}
+              />
+            }
+            sx={{
+              fontSize: "18px", // Adjust the font size of the button
+              padding: "10px", // Adjust the padding of the button
+              "& .MuiButton-startIcon > *:nth-of-type(1)": {
+                fontSize: "32px", // Adjust the font size of the first child of startIcon
+              },
+            }}
+          >
+            <VisuallyHiddenInput
+              type="file"
+              onChange={handleFileUpload}
+              id="fileInput"
+            />
+          </Button>
+        </Box>
+        {responseValue !== undefined ? (
+          <Box>
+            <Alert
+              severity="error"
+              sx={{
+                marginTop: 2,
+              }}
+            >
+              {responseValue.message}
+            </Alert>
+          </Box>
+        ) : (
+          ""
+        )}
         <Typography
           style={{
             marginBottom: 10,
@@ -220,7 +334,9 @@ const UserInfoPage: React.FC = () => {
           </TabPanel>
           <TabPanel value="Family">
             {/* Content for Family Information tab */}
-            <AddFamilyFrom userId={userId} />
+            <AddFamilyFrom userId={userId} onSuccess={handleFamilyUpdate} />
+            {/* Pass the familyTableUpdate state to FamilyList */}
+            <FamilyList userId={userId} key={familyTableUpdate} />
           </TabPanel>
           <TabPanel value="Bank">
             {/* Content for Bank Detail tab */}

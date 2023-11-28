@@ -193,6 +193,7 @@ export default function UserUpdate() {
               sx={{
                 width: "46%",
               }}
+              size="small"
             >
               <InputLabel id="select-role">Role</InputLabel>
               <Select
@@ -392,7 +393,7 @@ export default function UserUpdate() {
               justifyContent: "space-between",
             }}
           >
-            <FormControl fullWidth>
+            <FormControl fullWidth size="small">
               <InputLabel id="designation">Designation</InputLabel>
               <Select
                 labelId="designation"

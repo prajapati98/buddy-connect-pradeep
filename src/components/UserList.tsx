@@ -27,6 +27,7 @@ import {
   Stack,
   Switch,
 } from "@mui/material";
+import { IMGURL } from "./PrefixUrl";
 
 interface UserListData {
   profile: string;
@@ -153,7 +154,7 @@ const UserList = () => {
                 <Stack direction="row" spacing={2}>
                   <Avatar
                     alt="Avatar"
-                    src={`${row?.image || avatar}`}
+                    src={`${IMGURL}${row?.image || avatar}`}
                     sx={{ width: 50, height: 50 }}
                   />
                 </Stack>
