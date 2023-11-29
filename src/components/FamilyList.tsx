@@ -103,7 +103,6 @@ const FamilyList: React.FC<FamilyListProps> = ({ userId }) => {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          height: "100vh",
         }}
       >
         <CircularProgress />

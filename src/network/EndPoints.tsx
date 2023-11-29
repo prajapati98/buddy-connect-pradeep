@@ -12,4 +12,8 @@ export const USER_ENDPOINT = {
   ADD_FAMILY_MEMBER: `${apiPrefix}/family/addFamilyDetail.php`,
   GET_FAMILY_MEMBERS: `${apiPrefix}/family/getFamilyDetails.php`,
   DELETE_FAMILY_MEMBER: `${apiPrefix}/family/deleteFamilyDetail.php`,
+  ADD_BANK_DETAILS: `${apiPrefix}/bank/addBankDetail.php`,
+  GET_BANK_DETAILS: `${apiPrefix}/bank/getBankDetails.php`,
+  DELETE_BANK_DETAILS: `${apiPrefix}/bank/deleteBankDetail.php`,
+  SET_ACTIVE_ACCOUNT: `${apiPrefix}/bank/setAccountType.php`,
 };

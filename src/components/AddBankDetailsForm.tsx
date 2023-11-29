@@ -9,32 +9,23 @@ import CloseIcon from "@mui/icons-material/Close";
 import { useFormik } from "formik";
 import AddIcon from "@mui/icons-material/Add";
 import InputField from "./InputField";
-import {
-  Alert,
-  Box,
-  FormControl,
-  FormControlLabel,
-  InputLabel,
-  Radio,
-  RadioGroup,
-  Select,
-} from "@mui/material";
-import MenuItem from "@mui/material/MenuItem";
+import { Alert, Box, FormControlLabel, Radio, RadioGroup } from "@mui/material";
 import BtnSubmit from "./BtnSubmit";
-import { familyRegisterSchema } from "../schemas/familyRegisterSchema";
-import { AddFamilyMember } from "../network/user";
-enum Gender {
-  Male = "male",
-  Female = "female",
+import { addBankDetails } from "../network/user";
+import { AddBankDetailsSchema } from "../schemas/AddBankDetailsSchema";
+enum typeAccount {
+  primary = "primary",
+  secondary = "secondary",
 }
 
 export interface FormData {
-  name: string;
-  relation: string;
-  contact: string;
-  dob: string;
-  address: string;
-  gender: Gender.Male;
+  account_number: string;
+  bank_name: string;
+  bank_branch: string;
+  ifsc_code: string;
+  micr_code: string;
+  cif_code: string;
+  type_account: typeAccount;
 }
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
@@ -57,18 +48,12 @@ interface AddFamilyFormProps {
   userId: number | undefined;
   onSuccess: () => void; // Add this prop
 }
-const AddFamilyFrom: React.FC<AddFamilyFormProps> = ({ userId, onSuccess }) => {
+const AddBankDetailsForm: React.FC<AddFamilyFormProps> = ({
+  userId,
+  onSuccess,
+}) => {
   const [open, setOpen] = React.useState(false);
   const [res, setRes] = React.useState<ApiResponse | undefined>();
-  const relationOptions = [
-    { value: "father", label: "Father" },
-    { value: "mother", label: "Mother" },
-    { value: "brother", label: "Brother" },
-    { value: "sister", label: "Sister" },
-    { value: "spouse", label: "Spouse" },
-    { value: "son", label: "Son" },
-    { value: "daughter", label: "Daughter" },
-  ];
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -79,12 +64,13 @@ const AddFamilyFrom: React.FC<AddFamilyFormProps> = ({ userId, onSuccess }) => {
   };
 
   const initialValues: FormData = {
-    name: "",
-    relation: "",
-    address: "",
-    contact: "",
-    dob: "",
-    gender: Gender.Male,
+    account_number: "",
+    bank_name: "",
+    bank_branch: "",
+    ifsc_code: "",
+    micr_code: "",
+    cif_code: "",
+    type_account: typeAccount.primary,
   };
 
   const {
@@ -98,12 +84,12 @@ const AddFamilyFrom: React.FC<AddFamilyFormProps> = ({ userId, onSuccess }) => {
     resetForm,
   } = useFormik({
     initialValues: initialValues,
-    validationSchema: familyRegisterSchema,
+    validationSchema: AddBankDetailsSchema,
 
     onSubmit: async (values, { setSubmitting }) => {
       try {
         if (userId) {
-          const response = await AddFamilyMember(values, userId);
+          const response = await addBankDetails(values, userId);
           const responseData = response.data;
           setRes(responseData);
 
@@ -134,7 +120,7 @@ const AddFamilyFrom: React.FC<AddFamilyFormProps> = ({ userId, onSuccess }) => {
           mb: 2.2,
         }}
       >
-        Add Family Member
+        Add Bank Details
       </Button>
 
       <BootstrapDialog
@@ -145,7 +131,7 @@ const AddFamilyFrom: React.FC<AddFamilyFormProps> = ({ userId, onSuccess }) => {
       >
         <Box sx={{ padding: "30px" }}>
           <DialogTitle sx={{ m: 0, p: 2 }} id="customized-dialog-title">
-            Add Family Member
+            Add Bank Details
           </DialogTitle>
           <IconButton
             aria-label="close"
@@ -162,40 +148,60 @@ const AddFamilyFrom: React.FC<AddFamilyFormProps> = ({ userId, onSuccess }) => {
           <DialogContent dividers>
             <form onSubmit={handleSubmit}>
               <InputField
-                label="Name"
+                label="Account Number"
+                type="number"
+                name="account_number"
+                value={values.account_number}
+                errors={errors}
+                handleChange={handleChange}
+                handleBlur={handleBlur}
+                touched={touched}
+              />{" "}
+              <InputField
+                label="Bank Name"
                 type="text"
-                name="name"
-                value={values.name}
+                name="bank_name"
+                value={values.bank_name}
                 errors={errors}
                 handleChange={handleChange}
                 handleBlur={handleBlur}
                 touched={touched}
               />
               <InputField
-                label="Contact"
+                label="Bank Branch"
                 type="text"
-                name="contact"
-                value={values.contact}
+                name="bank_branch"
+                value={values.bank_branch}
                 errors={errors}
                 handleChange={handleChange}
                 handleBlur={handleBlur}
                 touched={touched}
               />
               <InputField
-                label=" DOB"
+                label="IFSC CODE"
                 type="text"
-                name="dob"
-                value={values.dob}
+                name="ifsc_code"
+                value={values.ifsc_code}
                 errors={errors}
                 handleChange={handleChange}
                 handleBlur={handleBlur}
                 touched={touched}
               />
               <InputField
-                label="Address"
+                label="MICR Code"
                 type="text"
-                name="address"
-                value={values.address}
+                name="micr_code"
+                value={values.micr_code}
+                errors={errors}
+                handleChange={handleChange}
+                handleBlur={handleBlur}
+                touched={touched}
+              />
+              <InputField
+                label="CIF Code"
+                type="text"
+                name="cif_code"
+                value={values.cif_code}
                 errors={errors}
                 handleChange={handleChange}
                 handleBlur={handleBlur}
@@ -203,63 +209,22 @@ const AddFamilyFrom: React.FC<AddFamilyFormProps> = ({ userId, onSuccess }) => {
               />
               <RadioGroup
                 row
-                name="gender"
+                name="type_account"
                 sx={{ backgroundColor: "white" }}
-                value={values.gender} // Add this line to bind the selected value
+                value={values.type_account} // Add this line to bind the selected value
                 onChange={handleChange} // Add this line to handle changes
               >
                 <FormControlLabel
-                  value="male"
+                  value="primary"
                   control={<Radio />}
-                  label="Male"
+                  label="Primary"
                 />
                 <FormControlLabel
-                  value="female"
+                  value="secondary"
                   control={<Radio />}
-                  label="Female"
+                  label="Secondary"
                 />
               </RadioGroup>
-              <FormControl
-                size="small"
-                sx={{
-                  mt: "16px",
-                  mb: "16px",
-                  position: "relative",
-                }}
-                fullWidth
-              >
-                <InputLabel id="relation">relation</InputLabel>
-                <Select
-                  labelId="relation"
-                  id="relation-select"
-                  name="relation"
-                  value={values.relation}
-                  label="Relation"
-                  onChange={(event) =>
-                    setFieldValue("relation", event.target.value as string)
-                  }
-                >
-                  {relationOptions.map((option) => (
-                    <MenuItem key={option.value} value={option.value}>
-                      {option.label}
-                    </MenuItem>
-                  ))}
-                </Select>
-                {errors.relation && touched.relation && (
-                  <span
-                    style={{
-                      color: "#d32f2f",
-                      fontSize: "12px",
-                      position: "absolute",
-                      width: "100%",
-                      bottom: "-22px",
-                      left: 0,
-                    }}
-                  >
-                    {errors.relation}
-                  </span>
-                )}
-              </FormControl>
               <BtnSubmit btnName="Add Member" />
               {res !== undefined && (
                 <Box>
@@ -286,4 +251,4 @@ const AddFamilyFrom: React.FC<AddFamilyFormProps> = ({ userId, onSuccess }) => {
   );
 };
 
-export default AddFamilyFrom;
+export default AddBankDetailsForm;

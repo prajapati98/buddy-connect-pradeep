@@ -23,6 +23,8 @@ import CameraAltIcon from "@mui/icons-material/CameraAlt";
 import { UploadImage } from "../network/user";
 import { styled } from "@mui/material/styles";
 import { IMGURL } from "./PrefixUrl";
+import AddBankDetailsForm from "./AddBankDetailsForm";
+import BankDetailsList from "./BankDetailsList";
 
 const UserInfoPage: React.FC = () => {
   enum Gender {
@@ -57,16 +59,16 @@ const UserInfoPage: React.FC = () => {
       user_id: string;
     };
   }
+  interface ErrorResponse {
+    error: {
+      message: string;
+    };
+  }
   const [selectedUserData, setSelectedUserData] =
     React.useState<FormData | null>(null);
   const { id } = useParams();
   const userId = id ? parseInt(id) : undefined;
   const dispatch = useDispatch<AppDispatch>();
-  useEffect(() => {
-    if (userId !== undefined) {
-      dispatch(singleUser(userId));
-    }
-  }, [userId, dispatch]);
 
   const selectedState = useSelector((state: RootState) => state.singleUserData);
   const [value, setValue] = React.useState("Personal");
@@ -75,14 +77,28 @@ const UserInfoPage: React.FC = () => {
     setValue(newValue);
   };
   const [familyTableUpdate, setFamilyTableUpdate] = React.useState<number>(0);
+  const [bankDetailsTableUpdate, setBankDetailsTableUpdate] =
+    React.useState<number>(0);
   const [responseValue, setResponseValue] = React.useState<
-    ApiResponse | undefined
+    ApiResponse | ErrorResponse | undefined
   >();
+
   const allowedExtensions = ["jpg", "jpeg", "png", "gif"];
+  function isFileValid(filename: string) {
+    const fileParts = filename.split(".");
+
+    if (fileParts.length > 1) {
+      const fileExtension = fileParts.pop()!.toLowerCase();
+      return allowedExtensions.includes(fileExtension);
+    }
+    return false;
+  }
 
   const handleFamilyUpdate = () => {
-    // Increment the state to trigger a re-render and update the FamilyList component
     setFamilyTableUpdate((prev) => prev + 1);
+  };
+  const handleBankDetailsUpdate = () => {
+    setBankDetailsTableUpdate((prev) => prev + 1);
   };
   const handleFileUpload = async (event: ChangeEvent<HTMLInputElement>) => {
     try {
@@ -93,12 +109,22 @@ const UserInfoPage: React.FC = () => {
           if (isFileValid(fileName)) {
             let formData = new FormData();
             formData.append("image", files[0]);
-
             const response = await UploadImage(formData, userId);
+            if (response.data.success) {
+              setSelectedUserData((prevUserData) => ({
+                ...(prevUserData as FormData),
+                image: response.data.response,
+              }));
+              console.log(response.data.response.image, "res");
+              setResponseValue(undefined);
+            }
           } else {
-            console.error(
-              "Invalid file type. Please upload a JPG, JPEG, PNG, or GIF file."
-            );
+            setResponseValue({
+              error: {
+                message:
+                  "Invalid file type. Please upload a JPG, JPEG, PNG, or GIF file.",
+              },
+            });
           }
         } else {
           console.error("No files selected");
@@ -112,10 +138,14 @@ const UserInfoPage: React.FC = () => {
     }
   };
   useEffect(() => {
-    // Handle the case where it's an array or null
+    if (userId !== undefined) {
+      dispatch(singleUser(userId));
+    }
+  }, [userId, dispatch]);
+  useEffect(() => {
     setSelectedUserData(
       Array.isArray(selectedState.singleUserData)
-        ? null // Handle array case if needed, or ignore it
+        ? null
         : (selectedState.singleUserData as unknown as FormData)
     );
   }, [selectedState.singleUserData]);
@@ -185,7 +215,7 @@ const UserInfoPage: React.FC = () => {
           <Avatar
             alt="avatar"
             src={`${IMGURL}${selectedUserData?.image || avatar}`}
-            sx={{ width: 150, height: 150 }}
+            sx={{ width: 150, height: 150, objectFit: "contain" }}
           />
 
           <Button
@@ -223,16 +253,33 @@ const UserInfoPage: React.FC = () => {
           </Button>
         </Box>
         {responseValue !== undefined ? (
-          <Box>
-            <Alert
-              severity="error"
-              sx={{
-                marginTop: 2,
-              }}
-            >
-              {responseValue.message}
-            </Alert>
-          </Box>
+          "error" in responseValue ? (
+            <Box>
+              <span
+                style={{
+                  color: "red",
+                  fontSize: "12px",
+                  position: "absolute",
+                  left: "50%",
+                  transform: "translateX(-50%)",
+                }}
+              >
+                {(responseValue as ErrorResponse).error.message}
+              </span>
+            </Box>
+          ) : (
+            <Box>
+              <span
+                style={{
+                  color: "red",
+                  fontSize: "12px",
+                  position: "absolute",
+                }}
+              >
+                {(responseValue as ApiResponse).message}
+              </span>
+            </Box>
+          )
         ) : (
           ""
         )}
@@ -339,8 +386,11 @@ const UserInfoPage: React.FC = () => {
             <FamilyList userId={userId} key={familyTableUpdate} />
           </TabPanel>
           <TabPanel value="Bank">
-            {/* Content for Bank Detail tab */}
-            Item Three
+            <AddBankDetailsForm
+              userId={userId}
+              onSuccess={handleBankDetailsUpdate}
+            />
+            <BankDetailsList userId={userId} key={bankDetailsTableUpdate} />
           </TabPanel>
           <TabPanel value="Salary">
             {/* Content for Salary tab */}

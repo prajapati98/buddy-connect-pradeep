@@ -57,6 +57,7 @@ const UserList = () => {
 
   const [userListData, setUserListData] = useState<UserListData[]>([]);
   const [userDelete, setUserDelete] = useState<string>("");
+  const [loading, setLoading] = React.useState<boolean>(false);
 
   useEffect(() => {
     // Assuming selectedState contains an array of data
@@ -101,11 +102,13 @@ const UserList = () => {
     userId: string,
     currentStatus: string
   ) => {
+    setLoading(true);
     const newStatus: string = event.target.checked ? "active" : "deActive";
     try {
       const response = await updateUserStatus(newStatus, userId);
       if (response.status === 200) {
         setError("");
+        setLoading(false);
         setUserListData((prevUserListData) => {
           return prevUserListData.map((user) =>
             user.id === userId ? { ...user, status: newStatus } : user
@@ -115,6 +118,8 @@ const UserList = () => {
     } catch (error: any) {
       setError(error.message);
       console.log("update user Status", error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -141,10 +146,10 @@ const UserList = () => {
             <TableCell>Full Name</TableCell>
             <TableCell>Email</TableCell>
             <TableCell>Designation</TableCell>
+            <TableCell>Active / Deactivate</TableCell>
             <TableCell>View</TableCell>
             <TableCell>Update</TableCell>
             <TableCell>Delete</TableCell>
-            <TableCell>Active / Deactivate</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -163,27 +168,6 @@ const UserList = () => {
               <TableCell>{row.email}</TableCell>
               <TableCell>{row.designation}</TableCell>
               <TableCell>
-                <Link to={`/UserInfoPage/${row.id}`}>
-                  <Button variant="contained">View</Button>
-                </Link>
-              </TableCell>
-              <TableCell>
-                <Link to={`/UserUpdate/${row.id}`}>
-                  <Button variant="contained" color="warning">
-                    Update
-                  </Button>
-                </Link>
-              </TableCell>
-              <TableCell>
-                <Button
-                  variant="contained"
-                  color="error"
-                  onClick={() => handleDelete(row.id)}
-                >
-                  Delete
-                </Button>
-              </TableCell>
-              <TableCell>
                 <FormControlLabel
                   control={
                     <Switch
@@ -198,6 +182,34 @@ const UserList = () => {
                   }
                   label=""
                 />
+              </TableCell>
+              <TableCell>
+                <Link to={`/UserInfoPage/${row.id}`}>
+                  <Button variant="contained" disabled={loading}>
+                    View
+                  </Button>
+                </Link>
+              </TableCell>
+              <TableCell>
+                <Link to={`/UserUpdate/${row.id}`}>
+                  <Button
+                    variant="contained"
+                    color="warning"
+                    disabled={loading}
+                  >
+                    Update
+                  </Button>
+                </Link>
+              </TableCell>
+              <TableCell>
+                <Button
+                  variant="contained"
+                  color="error"
+                  disabled={loading}
+                  onClick={() => handleDelete(row.id)}
+                >
+                  Delete
+                </Button>
               </TableCell>
             </TableRow>
           ))}

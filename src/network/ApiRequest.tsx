@@ -19,3 +19,7 @@ export const deleteRequest = (url: string) => {
 export const patchRequest = (url: string, payload: string) => {
   return axiosClient.patch(url, { status: payload });
 };
+
+export const patchRequestActiveAccount = (url: string) => {
+  return axiosClient.patch(url);
+};

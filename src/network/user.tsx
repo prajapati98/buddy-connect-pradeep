@@ -4,6 +4,7 @@ import {
   deleteRequest,
   putRequest,
   patchRequest,
+  patchRequestActiveAccount,
 } from "./ApiRequest";
 import { USER_ENDPOINT } from "./EndPoints";
 
@@ -51,5 +52,33 @@ export const DeleteFamilyMembers = (
 ) => {
   return deleteRequest(
     `${USER_ENDPOINT.DELETE_FAMILY_MEMBER}?user_id=${id}&family_id=${family_id}`
+  );
+};
+export const addBankDetails = (payload: any, id: number) => {
+  return postRequest(
+    `${USER_ENDPOINT.ADD_BANK_DETAILS}?user_id=${id}`,
+    payload
+  );
+};
+
+export const getBankDetails = (id: number | undefined) => {
+  return getRequest(`${USER_ENDPOINT.GET_BANK_DETAILS}?user_id=${id}`);
+};
+
+export const deleteBankDetails = (
+  id: number | undefined,
+  bank_id: number | undefined
+) => {
+  return deleteRequest(
+    `${USER_ENDPOINT.DELETE_BANK_DETAILS}?user_id=${id}&bank_id=${bank_id}`
+  );
+};
+
+export const setActiveAccount = (
+  id: number | undefined,
+  bank_id: number | undefined
+) => {
+  return patchRequestActiveAccount(
+    `${USER_ENDPOINT.SET_ACTIVE_ACCOUNT}?user_id=${id}&bank_id=${bank_id}`
   );
 };
