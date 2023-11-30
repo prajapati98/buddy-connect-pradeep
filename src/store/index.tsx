@@ -5,6 +5,7 @@ import userListSlice from "../features/userList/userListSlice";
 import singleUserSlice from "../features/ singleUser /singleUserSlice";
 import familyListSlice from "../features/getFamily/familyListSlice";
 import BankListSlice from "../features/getBankDetails/BankListSlice";
+import SalaryListSlice from "../features/getSalary/SalaryListSlice";
 export const store = configureStore({
   reducer: {
     login: loginSlice,
@@ -13,6 +14,7 @@ export const store = configureStore({
     singleUserData: singleUserSlice,
     FamilyList: familyListSlice,
     BankList: BankListSlice,
+    SalaryList: SalaryListSlice,
   },
 });
 export type RootState = ReturnType<typeof store.getState>;

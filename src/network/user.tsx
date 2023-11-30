@@ -43,10 +43,10 @@ export const AddFamilyMember = (payload: any, id: number) => {
     payload
   );
 };
-export const GetFamilyMembers = (id: number | undefined) => {
+export const getFamilyMembers = (id: number | undefined) => {
   return getRequest(`${USER_ENDPOINT.GET_FAMILY_MEMBERS}?user_id=${id}`);
 };
-export const DeleteFamilyMembers = (
+export const deleteFamilyMembers = (
   id: number | undefined,
   family_id: number | undefined
 ) => {
@@ -81,4 +81,14 @@ export const setActiveAccount = (
   return patchRequestActiveAccount(
     `${USER_ENDPOINT.SET_ACTIVE_ACCOUNT}?user_id=${id}&bank_id=${bank_id}`
   );
+};
+
+export const addSalaryDetails = (payload: any, id: number) => {
+  return postRequest(
+    `${USER_ENDPOINT.ADD_SALARY_DETAILS}?user_id=${id}`,
+    payload
+  );
+};
+export const getSalaryDetails = (id: number | undefined) => {
+  return getRequest(`${USER_ENDPOINT.GET_SALARY_DETAILS}?user_id=${id}`);
 };

@@ -37,6 +37,7 @@ interface bankListData {
   micr_code: string;
   cif_code: string;
   type_account: typeAccount;
+  address: string;
   id: string;
 }
 
@@ -148,7 +149,6 @@ const BankDetailsList: React.FC<BankListProps> = ({ userId }) => {
       </Box>
     );
   }
-
   return (
     <>
       {error ? (
@@ -171,7 +171,6 @@ const BankDetailsList: React.FC<BankListProps> = ({ userId }) => {
               <TableCell>MICR Code</TableCell>
               <TableCell>CIF Code</TableCell>
               <TableCell>type_account</TableCell>
-              <TableCell>Active / Deactive </TableCell>
               <TableCell>Delete</TableCell>
             </TableRow>
           </TableHead>
@@ -185,23 +184,7 @@ const BankDetailsList: React.FC<BankListProps> = ({ userId }) => {
                 <TableCell>{row.micr_code}</TableCell>
                 <TableCell>{row.cif_code}</TableCell>
                 <TableCell>{row.type_account}</TableCell>
-                <TableCell>
-                  {" "}
-                  <FormControlLabel
-                    control={
-                      <Switch
-                        sx={{ m: 1 }}
-                        inputProps={{ "aria-label": "controlled" }}
-                        checked={row.status === "active"}
-                        onChange={(event) =>
-                          handleSwitchChange(event, row.id, row.status)
-                        }
-                        id={row.id}
-                      />
-                    }
-                    label=""
-                  />
-                </TableCell>
+
                 <TableCell>
                   <Button
                     variant="contained"

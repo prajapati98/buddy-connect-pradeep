@@ -14,15 +14,14 @@ import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
-// import InboxIcon from "@mui/icons-material/MoveToInbox";
-// import MailIcon from "@mui/icons-material/Mail";
 import logo from "../assets/image/logo.png";
 import FeaturedPlayListIcon from "@mui/icons-material/FeaturedPlayList";
 import PersonIcon from "@mui/icons-material/Person";
-import { NavLink, useNavigate } from "react-router-dom";
-import { Typography } from "@mui/material";
+import { Link, NavLink, useNavigate } from "react-router-dom";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
 import LogoutIcon from "@mui/icons-material/Logout";
-import { Button } from "@mui/material";
+import { Button, Stack } from "@mui/material";
 import { logout } from "../features/login/loginSlice";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "../store";
@@ -31,6 +30,8 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
+import Avatar from "@mui/material/Avatar";
+import avatar2 from "../assets/image/avatar2.png";
 
 const drawerWidth = 240;
 
@@ -125,6 +126,7 @@ export default function MiniDrawer({ children }: MiniDrawerProps) {
 
   const handleLogout = () => {
     setDialogOpen(true);
+    handleCloseDrop();
   };
 
   const handleConfirmLogout = () => {
@@ -135,6 +137,14 @@ export default function MiniDrawer({ children }: MiniDrawerProps) {
 
   const handleClose = () => {
     setDialogOpen(false);
+  };
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const openMenu = Boolean(anchorEl);
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleCloseDrop = () => {
+    setAnchorEl(null);
   };
   return (
     <Box sx={{ display: "flex" }}>
@@ -152,17 +162,74 @@ export default function MiniDrawer({ children }: MiniDrawerProps) {
           >
             <MenuIcon />
           </IconButton>
-          <img src={logo} alt="logo" className="loginFromLogo" />
-          <Typography
+          <Link
+            to="/"
+            style={{
+              padding: 0,
+              margin: 0,
+            }}
+          >
+            <img src={logo} alt="logo" className="loginFromLogo" />
+          </Link>
+          <Box
             sx={{
               marginLeft: "auto",
             }}
           >
-            {user.first_name + " " + user.last_name}
-            <Button onClick={() => handleLogout()}>
-              <LogoutIcon sx={{ color: "#000" }} />
+            <Button
+              id="basic-button"
+              aria-controls={openMenu ? "basic-menu" : undefined}
+              aria-haspopup="true"
+              aria-expanded={openMenu ? "true" : undefined}
+              onClick={handleClick}
+              sx={{
+                color: "#fff",
+              }}
+            >
+              <Stack
+                direction="row"
+                spacing={2}
+                sx={{
+                  mr: 2,
+                }}
+              >
+                <Avatar alt={user.first_name} src={avatar2} />
+              </Stack>
+              {user.first_name + " " + user.last_name}
             </Button>
-          </Typography>
+            <Menu
+              id="basic-menu"
+              anchorEl={anchorEl}
+              open={openMenu}
+              onClose={handleCloseDrop}
+              MenuListProps={{
+                "aria-labelledby": "basic-button",
+              }}
+            >
+              <MenuItem onClick={handleCloseDrop}>
+                <Stack
+                  direction="row"
+                  spacing={2}
+                  sx={{
+                    mr: 2,
+                  }}
+                >
+                  <Avatar alt={user.first_name} src={avatar2} />
+                </Stack>
+
+                <Box>
+                  {user.first_name + " " + user.last_name}
+                  <br />
+                  {user.email}
+                </Box>
+              </MenuItem>
+              <Divider light />
+              <MenuItem onClick={() => handleLogout()}>
+                <LogoutIcon sx={{ color: "#000", mr: 2, ml: 2 }} />
+                Logout
+              </MenuItem>
+            </Menu>
+          </Box>
         </Toolbar>
       </AppBar>
       <Drawer variant="permanent" open={open}>

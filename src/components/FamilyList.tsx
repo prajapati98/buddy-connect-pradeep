@@ -17,7 +17,7 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import { Box, Button, CircularProgress } from "@mui/material";
 import { Typography } from "@mui/material";
-import { DeleteFamilyMembers } from "../network/user";
+import { deleteFamilyMembers } from "../network/user";
 enum Gender {
   Male = "male",
   Female = "female",
@@ -58,7 +58,7 @@ const FamilyList: React.FC<FamilyListProps> = ({ userId }) => {
   const handleConfirmDelete = async () => {
     if (memberDelete !== undefined) {
       try {
-        const response = await DeleteFamilyMembers(userId, memberDelete);
+        const response = await deleteFamilyMembers(userId, memberDelete);
         console.log(response);
       } catch (error: any) {
         console.log(error);

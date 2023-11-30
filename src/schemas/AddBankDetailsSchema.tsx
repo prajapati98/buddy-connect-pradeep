@@ -5,6 +5,7 @@ const bank_name = /^(([a-zA-Z]+\s)*[a-zA-Z]){3,255}$/;
 const ifsc_code = /^[a-zA-Z]{4}[0-9]{7}$/;
 const micr_code = /^\d{9}$/;
 const cif_code = /^\d{11}$/;
+const addressRegex = /^[a-zA-Z0-9\s,.'-]+$/;
 
 export const AddBankDetailsSchema = Yup.object().shape({
   bank_name: Yup.string()

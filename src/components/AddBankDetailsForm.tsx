@@ -104,7 +104,7 @@ const AddBankDetailsForm: React.FC<AddFamilyFormProps> = ({
           console.error("User ID is undefined");
         }
       } catch (error: any) {
-        console.error("An unknown error occurred:", error);
+        setRes(error);
       } finally {
         setSubmitting(false);
       }
@@ -210,7 +210,7 @@ const AddBankDetailsForm: React.FC<AddFamilyFormProps> = ({
               <RadioGroup
                 row
                 name="type_account"
-                sx={{ backgroundColor: "white" }}
+                sx={{ backgroundColor: "white", mt: "3px" }}
                 value={values.type_account} // Add this line to bind the selected value
                 onChange={handleChange} // Add this line to handle changes
               >

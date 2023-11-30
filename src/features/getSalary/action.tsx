@@ -1,11 +1,11 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { getFamilyMembers } from "../../network/user";
+import { getSalaryDetails } from "../../network/user";
 
 export const action = createAsyncThunk(
-  "familyList/familyList",
+  "SalaryList/SalaryList",
   async (id: number | undefined, thunkAPI) => {
     try {
-      const response = await getFamilyMembers(id);
+      const response = await getSalaryDetails(id);
       return response.data.response;
     } catch (error) {
       throw error;

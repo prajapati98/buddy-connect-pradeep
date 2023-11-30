@@ -1,4 +1,4 @@
-import React, { useEffect, ChangeEvent } from "react";
+import React, { useEffect, ChangeEvent, useRef } from "react";
 import {
   Typography,
   Box,
@@ -25,6 +25,8 @@ import { styled } from "@mui/material/styles";
 import { IMGURL } from "./PrefixUrl";
 import AddBankDetailsForm from "./AddBankDetailsForm";
 import BankDetailsList from "./BankDetailsList";
+import AddSalaryDetailsForm from "./AddSalaryDetailsForm";
+import SalaryDetailsList from "./SalaryDetailsList";
 
 const UserInfoPage: React.FC = () => {
   enum Gender {
@@ -64,6 +66,13 @@ const UserInfoPage: React.FC = () => {
       message: string;
     };
   }
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const handleAvatarClick = () => {
+    if (fileInputRef.current) {
+      fileInputRef.current.click();
+    }
+  };
+
   const [selectedUserData, setSelectedUserData] =
     React.useState<FormData | null>(null);
   const { id } = useParams();
@@ -76,9 +85,7 @@ const UserInfoPage: React.FC = () => {
   const handleChange = (event: React.SyntheticEvent, newValue: string) => {
     setValue(newValue);
   };
-  const [familyTableUpdate, setFamilyTableUpdate] = React.useState<number>(0);
-  const [bankDetailsTableUpdate, setBankDetailsTableUpdate] =
-    React.useState<number>(0);
+  const [tableUpdate, setTableUpdate] = React.useState<number>(0);
   const [responseValue, setResponseValue] = React.useState<
     ApiResponse | ErrorResponse | undefined
   >();
@@ -94,12 +101,10 @@ const UserInfoPage: React.FC = () => {
     return false;
   }
 
-  const handleFamilyUpdate = () => {
-    setFamilyTableUpdate((prev) => prev + 1);
+  const handleUpdate = () => {
+    setTableUpdate((prev) => prev + 1);
   };
-  const handleBankDetailsUpdate = () => {
-    setBankDetailsTableUpdate((prev) => prev + 1);
-  };
+
   const handleFileUpload = async (event: ChangeEvent<HTMLInputElement>) => {
     try {
       if (userId) {
@@ -115,7 +120,7 @@ const UserInfoPage: React.FC = () => {
                 ...(prevUserData as FormData),
                 image: response.data.response,
               }));
-              console.log(response.data.response.image, "res");
+
               setResponseValue(undefined);
             }
           } else {
@@ -215,7 +220,13 @@ const UserInfoPage: React.FC = () => {
           <Avatar
             alt="avatar"
             src={`${IMGURL}${selectedUserData?.image || avatar}`}
-            sx={{ width: 150, height: 150, objectFit: "contain" }}
+            sx={{
+              width: 150,
+              height: 150,
+              objectFit: "contain",
+              cursor: "pointer",
+            }}
+            onClick={handleAvatarClick}
           />
 
           <Button
@@ -249,6 +260,7 @@ const UserInfoPage: React.FC = () => {
               type="file"
               onChange={handleFileUpload}
               id="fileInput"
+              ref={fileInputRef}
             />
           </Button>
         </Box>
@@ -291,7 +303,7 @@ const UserInfoPage: React.FC = () => {
         >{`${selectedUserData?.first_name} ${selectedUserData?.last_name}`}</Typography>
         <Typography>{`${selectedUserData?.designation}`}</Typography>
       </Stack>
-      <Box sx={{ width: "80%", typography: "body1", margin: "auto" }}>
+      <Box sx={{ typography: "body1", margin: "auto" }}>
         <TabContext value={value}>
           <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
             <TabList
@@ -381,20 +393,17 @@ const UserInfoPage: React.FC = () => {
           </TabPanel>
           <TabPanel value="Family">
             {/* Content for Family Information tab */}
-            <AddFamilyFrom userId={userId} onSuccess={handleFamilyUpdate} />
+            <AddFamilyFrom userId={userId} onSuccess={handleUpdate} />
             {/* Pass the familyTableUpdate state to FamilyList */}
-            <FamilyList userId={userId} key={familyTableUpdate} />
+            <FamilyList userId={userId} key={tableUpdate} />
           </TabPanel>
           <TabPanel value="Bank">
-            <AddBankDetailsForm
-              userId={userId}
-              onSuccess={handleBankDetailsUpdate}
-            />
-            <BankDetailsList userId={userId} key={bankDetailsTableUpdate} />
+            <AddBankDetailsForm userId={userId} onSuccess={handleUpdate} />
+            <BankDetailsList userId={userId} key={tableUpdate} />
           </TabPanel>
           <TabPanel value="Salary">
-            {/* Content for Salary tab */}
-            Item Four
+            <AddSalaryDetailsForm userId={userId} onSuccess={handleUpdate} />
+            <SalaryDetailsList userId={userId} key={tableUpdate} />
           </TabPanel>
         </TabContext>
       </Box>
