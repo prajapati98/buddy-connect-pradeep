@@ -32,6 +32,8 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import Avatar from "@mui/material/Avatar";
 import avatar2 from "../assets/image/avatar2.png";
+import DashboardIcon from "@mui/icons-material/Dashboard";
+import DeleteSweepIcon from "@mui/icons-material/DeleteSweep";
 
 const drawerWidth = 240;
 
@@ -109,7 +111,7 @@ type MiniDrawerProps = {
 
 export default function MiniDrawer({ children }: MiniDrawerProps) {
   const theme = useTheme();
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = React.useState(true);
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -246,7 +248,12 @@ export default function MiniDrawer({ children }: MiniDrawerProps) {
         <List>
           {[
             {
-              text: "User List",
+              text: "Dashboard",
+              icon: <DashboardIcon />,
+              path: "/",
+            },
+            {
+              text: "Users List",
               icon: <FeaturedPlayListIcon />,
               path: "/user-list",
             },
@@ -254,6 +261,11 @@ export default function MiniDrawer({ children }: MiniDrawerProps) {
               text: "Register New User",
               icon: <PersonIcon />,
               path: "/register-user",
+            },
+            {
+              text: "Deleted List",
+              icon: <DeleteSweepIcon />,
+              path: "/deleted-list",
             },
           ].map(({ text, icon, path }, index) => (
             <ListItem key={text} disablePadding sx={{ display: "block" }}>

@@ -15,16 +15,8 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
-import {
-  Alert,
-  Box,
-  Button,
-  CircularProgress,
-  FormControlLabel,
-  Stack,
-  Switch,
-} from "@mui/material";
-import { deleteBankDetails, setActiveAccount } from "../network/user";
+import { Alert, Box, Button, CircularProgress, Stack } from "@mui/material";
+import { deleteBankDetails } from "../network/user";
 enum typeAccount {
   primary = "primary",
   secondary = "secondary",
@@ -55,7 +47,6 @@ const BankDetailsList: React.FC<BankListProps> = ({ userId }) => {
 
   const [bankListData, setBankListData] = useState<bankListData[]>([]);
   const [error, setError] = useState<string>("");
-  const [loading, setLoading] = React.useState<boolean>(false);
 
   const [deleteId, setDeleteId] = useState<number | undefined>();
 
@@ -90,34 +81,13 @@ const BankDetailsList: React.FC<BankListProps> = ({ userId }) => {
   const handleClose = () => {
     setDialogOpen(false);
   };
-  const handleSwitchChange = async (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    setLoading(true);
-    try {
-      const response = await setActiveAccount(userId, deleteId);
-      if (response.status === 200) {
-        setError("");
-        setLoading(false);
-        // setUserListData((prevUserListData) => {
-        //   return prevUserListData.map((user) =>
-        //     user.id === userId ? { ...user, status: newStatus } : user
-        //   );
-        // });
-      }
-    } catch (error: any) {
-      setError(error.message);
-      console.log("update user Status", error);
-    } finally {
-      setLoading(false);
-    }
-  };
+
   useEffect(() => {
     // Assuming selectedState contains an array of data
     if (selectedState && Array.isArray(selectedState.BankList)) {
       setBankListData(selectedState.BankList);
     }
-  }, [selectedState]);
+  }, [selectedState, userId]);
 
   if (selectedState.isError) {
     return (
@@ -136,7 +106,7 @@ const BankDetailsList: React.FC<BankListProps> = ({ userId }) => {
       </Box>
     );
   }
-  if (bankListData.length === 0 && selectedState.loading) {
+  if (selectedState.loading) {
     return (
       <Box
         sx={{
@@ -160,63 +130,67 @@ const BankDetailsList: React.FC<BankListProps> = ({ userId }) => {
       ) : (
         ""
       )}
-      <TableContainer component={Paper}>
-        <Table sx={{ minWidth: 650 }} aria-label="simple table">
-          <TableHead>
-            <TableRow>
-              <TableCell>Bank Name</TableCell>
-              <TableCell>Bank Branch</TableCell>
-              <TableCell>Account Number</TableCell>
-              <TableCell>IFC Code</TableCell>
-              <TableCell>MICR Code</TableCell>
-              <TableCell>CIF Code</TableCell>
-              <TableCell>type_account</TableCell>
-              <TableCell>Delete</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {bankListData.map((row) => (
-              <TableRow key={row.id}>
-                <TableCell>{`${row.bank_name}`}</TableCell>
-                <TableCell>{row.bank_branch}</TableCell>
-                <TableCell>{row.account_number}</TableCell>
-                <TableCell>{row.ifsc_code}</TableCell>
-                <TableCell>{row.micr_code}</TableCell>
-                <TableCell>{row.cif_code}</TableCell>
-                <TableCell>{row.type_account}</TableCell>
-
-                <TableCell>
-                  <Button
-                    variant="contained"
-                    color="error"
-                    onClick={() => handleDelete(parseInt(row.id))}
-                  >
-                    Delete
-                  </Button>
-                </TableCell>
+      {bankListData.length !== 0 ? (
+        <TableContainer component={Paper}>
+          <Table sx={{ minWidth: 650 }} aria-label="simple table">
+            <TableHead>
+              <TableRow>
+                <TableCell>Bank Name</TableCell>
+                <TableCell>Bank Branch</TableCell>
+                <TableCell>Account Number</TableCell>
+                <TableCell>IFC Code</TableCell>
+                <TableCell>MICR Code</TableCell>
+                <TableCell>CIF Code</TableCell>
+                <TableCell>type_account</TableCell>
+                <TableCell>Delete</TableCell>
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-        <Box>
-          <Dialog open={dialogOpen} onClose={handleClose} maxWidth="xs">
-            <DialogTitle>Delete Confirmation</DialogTitle>
-            <DialogContent>
-              <DialogContentText>
-                Are you sure you want to delete this Member?
-              </DialogContentText>
-            </DialogContent>
-            <DialogActions>
-              <Button onClick={handleClose} color="primary">
-                Cancel
-              </Button>
-              <Button color="primary" onClick={handleConfirmDelete}>
-                DELETE
-              </Button>
-            </DialogActions>
-          </Dialog>
-        </Box>
-      </TableContainer>
+            </TableHead>
+            <TableBody>
+              {bankListData.map((row) => (
+                <TableRow key={row.id}>
+                  <TableCell>{`${row.bank_name}`}</TableCell>
+                  <TableCell>{row.bank_branch}</TableCell>
+                  <TableCell>{row.account_number}</TableCell>
+                  <TableCell>{row.ifsc_code}</TableCell>
+                  <TableCell>{row.micr_code}</TableCell>
+                  <TableCell>{row.cif_code}</TableCell>
+                  <TableCell>{row.type_account}</TableCell>
+
+                  <TableCell>
+                    <Button
+                      variant="contained"
+                      color="error"
+                      onClick={() => handleDelete(parseInt(row.id))}
+                    >
+                      Delete
+                    </Button>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+          <Box>
+            <Dialog open={dialogOpen} onClose={handleClose} maxWidth="xs">
+              <DialogTitle>Delete Confirmation</DialogTitle>
+              <DialogContent>
+                <DialogContentText>
+                  Are you sure you want to delete this Member?
+                </DialogContentText>
+              </DialogContent>
+              <DialogActions>
+                <Button onClick={handleClose} color="primary">
+                  Cancel
+                </Button>
+                <Button color="primary" onClick={handleConfirmDelete}>
+                  DELETE
+                </Button>
+              </DialogActions>
+            </Dialog>
+          </Box>
+        </TableContainer>
+      ) : (
+        ""
+      )}
     </>
   );
 };

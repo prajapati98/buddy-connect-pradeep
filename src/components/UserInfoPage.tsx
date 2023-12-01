@@ -219,7 +219,11 @@ const UserInfoPage: React.FC = () => {
         >
           <Avatar
             alt="avatar"
-            src={`${IMGURL}${selectedUserData?.image || avatar}`}
+            src={
+              selectedUserData?.image
+                ? `${IMGURL}${selectedUserData.image} `
+                : avatar
+            }
             sx={{
               width: 150,
               height: 150,
@@ -244,15 +248,18 @@ const UserInfoPage: React.FC = () => {
                   fontSize: "32px",
                   color: "#2196f3",
                   cursor: "pointer",
+                  backgroundColor: "white",
+                  borderRadius: "50%",
+                  padding: "5px",
                   ":hover": { color: "#1769aa" },
                 }}
               />
             }
             sx={{
-              fontSize: "18px", // Adjust the font size of the button
-              padding: "10px", // Adjust the padding of the button
+              fontSize: "18px",
+              padding: "10px",
               "& .MuiButton-startIcon > *:nth-of-type(1)": {
-                fontSize: "32px", // Adjust the font size of the first child of startIcon
+                fontSize: "35px",
               },
             }}
           >

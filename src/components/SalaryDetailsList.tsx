@@ -36,11 +36,11 @@ const SalaryDetailsList: React.FC<salaryListProps> = ({ userId }) => {
   useEffect(() => {
     dispatch(action(userId));
   }, [dispatch, userId]);
-  const [salaryListData, setBankListData] = useState<salaryListData[]>([]);
+  const [salaryListData, setSalaryListData] = useState<salaryListData[]>([]);
   useEffect(() => {
     // Assuming selectedState contains an array of data
     if (selectedState && Array.isArray(selectedState.SalaryList)) {
-      setBankListData(selectedState.SalaryList);
+      setSalaryListData(selectedState.SalaryList);
     }
   }, [selectedState]);
   if (selectedState.isError) {
@@ -60,7 +60,7 @@ const SalaryDetailsList: React.FC<salaryListProps> = ({ userId }) => {
       </Box>
     );
   }
-  if (salaryListData.length === 0 && selectedState.loading) {
+  if (selectedState.loading) {
     return (
       <Box
         sx={{
@@ -73,44 +73,49 @@ const SalaryDetailsList: React.FC<salaryListProps> = ({ userId }) => {
       </Box>
     );
   }
+
   return (
     <>
-      <TableContainer component={Paper}>
-        <Table sx={{ minWidth: 650 }} aria-label="simple table">
-          <TableHead>
-            <TableRow>
-              <TableCell>Basic Salary</TableCell>
-              <TableCell>Home Rent Allowances</TableCell>
-              <TableCell>Conveyance Allowance</TableCell>
-              <TableCell>PF Amount</TableCell>
-              <TableCell>ESIC Amount</TableCell>
-              <TableCell>Income Tax</TableCell>
-              <TableCell>PT Amount</TableCell>
-              <TableCell>Loan</TableCell>
-              <TableCell>Health Insurance</TableCell>
-              <TableCell>Appraisal Date</TableCell>
-              <TableCell>Utility Allowance</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {salaryListData.map((row) => (
-              <TableRow key={row.id}>
-                <TableCell>{`${row.basic_salary}`}</TableCell>
-                <TableCell>{row.home_rent_allowances}</TableCell>
-                <TableCell>{row.conveyance_allowance}</TableCell>
-                <TableCell>{row.pf_amount}</TableCell>
-                <TableCell>{row.esic_amount}</TableCell>
-                <TableCell>{row.income_tax}</TableCell>
-                <TableCell>{row.pt_amount}</TableCell>
-                <TableCell>{row.loan}</TableCell>
-                <TableCell>{row.health_insurance}</TableCell>
-                <TableCell>{row.appraisal_date}</TableCell>
-                <TableCell>{row.utility_allowance}</TableCell>
+      {salaryListData.length !== 0 ? (
+        <TableContainer component={Paper}>
+          <Table sx={{ minWidth: 650 }} aria-label="simple table">
+            <TableHead>
+              <TableRow>
+                <TableCell>Basic Salary</TableCell>
+                <TableCell>Home Rent Allowances</TableCell>
+                <TableCell>Conveyance Allowance</TableCell>
+                <TableCell>PF Amount</TableCell>
+                <TableCell>ESIC Amount</TableCell>
+                <TableCell>Income Tax</TableCell>
+                <TableCell>PT Amount</TableCell>
+                <TableCell>Loan</TableCell>
+                <TableCell>Health Insurance</TableCell>
+                <TableCell>Appraisal Date</TableCell>
+                <TableCell>Utility Allowance</TableCell>
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
+            </TableHead>
+            <TableBody>
+              {salaryListData.map((row) => (
+                <TableRow key={row.id}>
+                  <TableCell>{`${row.basic_salary}`}</TableCell>
+                  <TableCell>{row.home_rent_allowances}</TableCell>
+                  <TableCell>{row.conveyance_allowance}</TableCell>
+                  <TableCell>{row.pf_amount}</TableCell>
+                  <TableCell>{row.esic_amount}</TableCell>
+                  <TableCell>{row.income_tax}</TableCell>
+                  <TableCell>{row.pt_amount}</TableCell>
+                  <TableCell>{row.loan}</TableCell>
+                  <TableCell>{row.health_insurance}</TableCell>
+                  <TableCell>{row.appraisal_date}</TableCell>
+                  <TableCell>{row.utility_allowance}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      ) : (
+        ""
+      )}
     </>
   );
 };

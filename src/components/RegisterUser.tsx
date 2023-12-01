@@ -16,6 +16,11 @@ import { AppDispatch, RootState } from "../store";
 import { useDispatch, useSelector } from "react-redux";
 import { action } from "../features/user/action";
 import { useNavigate } from "react-router-dom";
+import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import dayjs from "dayjs";
 
 export default function RegisterUser() {
   const dispatch = useDispatch<AppDispatch>();
@@ -35,9 +40,9 @@ export default function RegisterUser() {
     state: string;
     contact: string;
     country: string;
-    dob: string;
+    dob: string | null;
     gender: Gender;
-    joining_date: string;
+    joining_date: string | null;
     pan_card: string;
     designation: string;
     email: string;
@@ -55,9 +60,9 @@ export default function RegisterUser() {
     state: "",
     contact: "",
     country: "",
-    dob: "",
+    dob: null,
     gender: Gender.Male,
-    joining_date: "",
+    joining_date: null,
     pan_card: "",
     designation: "",
   };
@@ -259,7 +264,7 @@ export default function RegisterUser() {
               justifyContent: "space-between",
             }}
           >
-            <InputField
+            {/* <InputField
               label=" DOB"
               type="text"
               name="dob"
@@ -268,7 +273,46 @@ export default function RegisterUser() {
               handleChange={handleChange}
               handleBlur={handleBlur}
               touched={touched}
-            />
+            /> */}
+            <Box
+              sx={{
+                position: "relative",
+                mt: "8px",
+                mb: "16px",
+                width: "45.5%",
+              }}
+            >
+              <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <DemoContainer
+                  components={["DatePicker", "DatePicker", "DatePicker"]}
+                >
+                  <DatePicker
+                    label="DOB"
+                    value={values.dob}
+                    slotProps={{ textField: { size: "small" } }}
+                    onChange={(date) => {
+                      const formattedDate = dayjs(date).format("YYYY-MM-DD");
+
+                      setFieldValue("dob", formattedDate);
+                    }}
+                  />
+                </DemoContainer>
+              </LocalizationProvider>
+              {errors.dob && touched.dob && (
+                <span
+                  style={{
+                    color: "#d32f2f",
+                    fontSize: "12px",
+                    position: "absolute",
+                    width: "100%",
+                    bottom: "-22px",
+                    left: 0,
+                  }}
+                >
+                  {errors.dob}
+                </span>
+              )}
+            </Box>
 
             <RadioGroup
               row
@@ -292,7 +336,7 @@ export default function RegisterUser() {
               justifyContent: "space-between",
             }}
           >
-            <InputField
+            {/* <InputField
               label="Joining Date"
               type="text"
               name="joining_date"
@@ -301,7 +345,44 @@ export default function RegisterUser() {
               handleChange={handleChange}
               handleBlur={handleBlur}
               touched={touched}
-            />
+            /> */}
+            <Box
+              sx={{
+                position: "relative",
+                mt: "8px",
+                width: "45.5%",
+              }}
+            >
+              <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <DemoContainer
+                  components={["DatePicker", "DatePicker", "DatePicker"]}
+                >
+                  <DatePicker
+                    label="Joining Date"
+                    value={values.joining_date}
+                    slotProps={{ textField: { size: "small" } }}
+                    onChange={(date) => {
+                      const formattedDate = dayjs(date).format("YYYY-MM-DD");
+                      setFieldValue("joining_date", formattedDate);
+                    }}
+                  />
+                </DemoContainer>
+              </LocalizationProvider>
+              {errors.joining_date && touched.joining_date && (
+                <span
+                  style={{
+                    color: "#d32f2f",
+                    fontSize: "12px",
+                    position: "absolute",
+                    width: "100%",
+                    bottom: "-7px",
+                    left: 0,
+                  }}
+                >
+                  {errors.joining_date}
+                </span>
+              )}
+            </Box>
             <InputField
               label="Pan Card"
               type="text"

@@ -10,6 +10,7 @@ import RegisterUser from "./RegisterUser";
 import UserList from "./UserList";
 import UserUpdate from "./UserUpdate";
 import UserInfoPage from "./UserInfoPage";
+import DeletedList from "./DeletedList";
 
 interface AppLayoutProps {
   children: React.ReactNode;
@@ -84,6 +85,16 @@ const router = createBrowserRouter([
       <AppLayout>
         <Protected>
           <UserInfoPage />
+        </Protected>
+      </AppLayout>
+    ),
+  },
+  {
+    path: "deleted-list",
+    element: (
+      <AppLayout>
+        <Protected>
+          <DeletedList />
         </Protected>
       </AppLayout>
     ),

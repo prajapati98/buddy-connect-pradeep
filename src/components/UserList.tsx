@@ -159,7 +159,7 @@ const UserList = () => {
                 <Stack direction="row" spacing={2}>
                   <Avatar
                     alt="Avatar"
-                    src={`${IMGURL}${row?.image || avatar}`}
+                    src={row?.image ? `${IMGURL}${row.image}` : avatar}
                     sx={{ width: 50, height: 50 }}
                   />
                 </Stack>

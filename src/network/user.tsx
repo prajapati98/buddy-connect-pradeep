@@ -74,14 +74,14 @@ export const deleteBankDetails = (
   );
 };
 
-export const setActiveAccount = (
-  id: number | undefined,
-  bank_id: number | undefined
-) => {
-  return patchRequestActiveAccount(
-    `${USER_ENDPOINT.SET_ACTIVE_ACCOUNT}?user_id=${id}&bank_id=${bank_id}`
-  );
-};
+// export const setActiveAccount = (
+//   id: number | undefined,
+//   bank_id: number | undefined
+// ) => {
+//   return patchRequestActiveAccount(
+//     `${USER_ENDPOINT.SET_ACTIVE_ACCOUNT}?user_id=${id}&bank_id=${bank_id}`
+//   );
+// };
 
 export const addSalaryDetails = (payload: any, id: number) => {
   return postRequest(
@@ -91,4 +91,8 @@ export const addSalaryDetails = (payload: any, id: number) => {
 };
 export const getSalaryDetails = (id: number | undefined) => {
   return getRequest(`${USER_ENDPOINT.GET_SALARY_DETAILS}?user_id=${id}`);
+};
+
+export const getDeletedDetails = () => {
+  return getRequest(USER_ENDPOINT.GET_DELETED_DETAILS);
 };

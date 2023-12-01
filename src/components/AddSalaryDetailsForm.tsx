@@ -96,7 +96,6 @@ const AddSalaryDetailsForm: React.FC<AddFamilyFormProps> = ({
     validationSchema: AddSalarySchema,
 
     onSubmit: async (values, { setSubmitting }) => {
-      console.log(values);
       try {
         if (userId) {
           const response = await addSalaryDetails(values, userId);
@@ -120,7 +119,7 @@ const AddSalaryDetailsForm: React.FC<AddFamilyFormProps> = ({
       }
     },
   });
-  console.log(errors);
+
   return (
     <Box>
       <Button
@@ -248,45 +247,43 @@ const AddSalaryDetailsForm: React.FC<AddFamilyFormProps> = ({
                 handleBlur={handleBlur}
                 touched={touched}
               />
-              <InputField
-                label="Appraisal Date"
-                type="text"
-                name="appraisal_date"
-                value={values.appraisal_date}
-                errors={errors}
-                handleChange={handleChange}
-                handleBlur={handleBlur}
-                touched={touched}
-              />
-              {/* <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <DemoContainer
-                  components={["DatePicker", "DatePicker", "DatePicker"]}
-                >
-                  <DatePicker
-                    label="Appraisal Date"
-                    value={values.appraisal_date}
-                    slotProps={{ textField: { size: "small" } }}
-                    onChange={(date) => {
-                      const formattedDate = dayjs(date).format("YYYY-MM-DD");
-                      setFieldValue("appraisal_date", formattedDate);
+              <Box
+                sx={{
+                  position: "relative",
+                  mt: "8px",
+                  mb: "16px",
+                }}
+              >
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <DemoContainer
+                    components={["DatePicker", "DatePicker", "DatePicker"]}
+                  >
+                    <DatePicker
+                      label="Appraisal Date"
+                      value={values.appraisal_date}
+                      slotProps={{ textField: { size: "small" } }}
+                      onChange={(date) => {
+                        const formattedDate = dayjs(date).format("YYYY-MM-DD");
+                        setFieldValue("appraisal_date", formattedDate);
+                      }}
+                    />
+                  </DemoContainer>
+                </LocalizationProvider>
+                {errors.appraisal_date && touched.appraisal_date && (
+                  <span
+                    style={{
+                      color: "#d32f2f",
+                      fontSize: "12px",
+                      position: "absolute",
+                      width: "100%",
+                      bottom: "-22px",
+                      left: 0,
                     }}
-                  />
-                </DemoContainer>
-              </LocalizationProvider>
-              {errors.appraisal_date && touched.appraisal_date && (
-                <span
-                  style={{
-                    color: "#d32f2f",
-                    fontSize: "12px",
-                    position: "absolute",
-                    width: "100%",
-                    bottom: "-22px",
-                    left: 0,
-                  }}
-                >
-                  {errors.appraisal_date}
-                </span>
-              )} */}
+                  >
+                    {errors.appraisal_date}
+                  </span>
+                )}
+              </Box>
               <InputField
                 label="Utility Allowance"
                 type="text"

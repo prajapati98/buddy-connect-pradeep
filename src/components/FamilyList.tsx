@@ -59,7 +59,6 @@ const FamilyList: React.FC<FamilyListProps> = ({ userId }) => {
     if (memberDelete !== undefined) {
       try {
         const response = await deleteFamilyMembers(userId, memberDelete);
-        console.log(response);
       } catch (error: any) {
         console.log(error);
       }
@@ -96,7 +95,7 @@ const FamilyList: React.FC<FamilyListProps> = ({ userId }) => {
       </Box>
     );
   }
-  if (familyListData.length === 0 && selectedState.loading) {
+  if (selectedState.loading) {
     return (
       <Box
         sx={{
@@ -111,60 +110,67 @@ const FamilyList: React.FC<FamilyListProps> = ({ userId }) => {
   }
 
   return (
-    <TableContainer component={Paper}>
-      <Table sx={{ minWidth: 650 }} aria-label="simple table">
-        <TableHead>
-          <TableRow>
-            <TableCell>Name</TableCell>
-            <TableCell>Contact</TableCell>
-            <TableCell>Date Of Birth</TableCell>
-            <TableCell>Address</TableCell>
-            <TableCell>Relation</TableCell>
-            <TableCell>Gender</TableCell>
-            <TableCell>Delete</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {familyListData.map((row) => (
-            <TableRow key={row.id}>
-              <TableCell>{`${row.name}`}</TableCell>
-              <TableCell>{row.contact}</TableCell>
-              <TableCell>{row.dob}</TableCell>
-              <TableCell>{row.address}</TableCell>
-              <TableCell>{row.relation}</TableCell>
-              <TableCell>{row.gender}</TableCell>
-              <TableCell>
-                <Button
-                  variant="contained"
-                  color="error"
-                  onClick={() => handleDelete(parseInt(row.id))}
-                >
-                  Delete
+    <>
+      {" "}
+      {familyListData.length !== 0 ? (
+        <TableContainer component={Paper}>
+          <Table sx={{ minWidth: 650 }} aria-label="simple table">
+            <TableHead>
+              <TableRow>
+                <TableCell>Name</TableCell>
+                <TableCell>Contact</TableCell>
+                <TableCell>Date Of Birth</TableCell>
+                <TableCell>Address</TableCell>
+                <TableCell>Relation</TableCell>
+                <TableCell>Gender</TableCell>
+                <TableCell>Delete</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {familyListData.map((row) => (
+                <TableRow key={row.id}>
+                  <TableCell>{`${row.name}`}</TableCell>
+                  <TableCell>{row.contact}</TableCell>
+                  <TableCell>{row.dob}</TableCell>
+                  <TableCell>{row.address}</TableCell>
+                  <TableCell>{row.relation}</TableCell>
+                  <TableCell>{row.gender}</TableCell>
+                  <TableCell>
+                    <Button
+                      variant="contained"
+                      color="error"
+                      onClick={() => handleDelete(parseInt(row.id))}
+                    >
+                      Delete
+                    </Button>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+          <Box>
+            <Dialog open={dialogOpen} onClose={handleClose} maxWidth="xs">
+              <DialogTitle>Delete Confirmation</DialogTitle>
+              <DialogContent>
+                <DialogContentText>
+                  Are you sure you want to delete this Member?
+                </DialogContentText>
+              </DialogContent>
+              <DialogActions>
+                <Button onClick={handleClose} color="primary">
+                  Cancel
                 </Button>
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-      <Box>
-        <Dialog open={dialogOpen} onClose={handleClose} maxWidth="xs">
-          <DialogTitle>Delete Confirmation</DialogTitle>
-          <DialogContent>
-            <DialogContentText>
-              Are you sure you want to delete this Member?
-            </DialogContentText>
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={handleClose} color="primary">
-              Cancel
-            </Button>
-            <Button color="primary" onClick={handleConfirmDelete}>
-              DELETE
-            </Button>
-          </DialogActions>
-        </Dialog>
-      </Box>
-    </TableContainer>
+                <Button color="primary" onClick={handleConfirmDelete}>
+                  DELETE
+                </Button>
+              </DialogActions>
+            </Dialog>
+          </Box>
+        </TableContainer>
+      ) : (
+        ""
+      )}
+    </>
   );
 };
 
