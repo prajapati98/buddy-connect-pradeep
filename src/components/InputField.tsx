@@ -27,8 +27,8 @@ const InputField: React.FC<FormFieldProps> = (props) => {
         size="small"
         {...rest}
         sx={{
-          mt: "16px",
-          mb: "16px",
+          mt: "14px",
+          mb: "14px",
         }}
       />
       {errors[rest.name as string] && touched[rest.name as string] && (

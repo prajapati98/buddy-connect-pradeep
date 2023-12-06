@@ -21,6 +21,12 @@ import CircularProgress from "@mui/material/CircularProgress";
 import { updatePersonalDetail } from "../network/user";
 import { useNavigate, useParams } from "react-router-dom";
 
+import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import dayjs from "dayjs";
+
 export default function UserUpdate() {
   interface FormData {
     first_name: string;
@@ -157,11 +163,20 @@ export default function UserUpdate() {
 
   return (
     <Box display="flex" flexDirection="column" alignItems="center">
-      <Box className="RegistrationFrom">
+      <Box
+        sx={{
+          width: { xs: "100%", md: "550px" },
+          minWidth: "250px",
+
+          boxShadow: "0px 4px 15px 0px rgba(0, 0, 0, 0.15)",
+          padding: "20px 20px",
+          borderRadius: "10px",
+        }}
+      >
         <Typography
           variant="h5"
           sx={{
-            fontSize: "30px",
+            fontSize: { xs: "20px", sm: "30px" },
             fontWeight: "700",
             textAlign: "center",
             marginBottom: "20px",
@@ -172,12 +187,11 @@ export default function UserUpdate() {
         <form onSubmit={handleSubmit} style={{ width: "100%" }}>
           <Box
             sx={{
-              display: "flex",
+              display: { xs: "block", md: "flex" },
               alignItems: "center",
               justifyContent: "space-between",
             }}
           >
-            <input type="hidden" name="status" value={values.status} />
             <InputField
               label="Email"
               type="email"
@@ -191,31 +205,32 @@ export default function UserUpdate() {
             />
             <FormControl
               sx={{
-                width: "46%",
+                width: { xs: "100%", md: "46%" },
+                mt: { xs: "16px", md: 0 },
+                mb: { xs: "16px", md: 0 },
               }}
               size="small"
             >
               <InputLabel id="select-role">Role</InputLabel>
               <Select
                 labelId="select-role"
-                id="simple-select"
+                id="demo-simple-select"
                 value={values.role}
                 label="Role"
-                defaultValue={selectedUserData?.role}
                 onChange={(event) =>
                   setFieldValue("role", event.target.value as string)
                 }
               >
-                <MenuItem value="superAdmin">Super Admin</MenuItem>
-                <MenuItem value="admin">Admin</MenuItem>
-                <MenuItem value="hr">HR</MenuItem>
-                <MenuItem value="associate">Associate</MenuItem>
+                <MenuItem value="superAdmin">superAdmin</MenuItem>
+                <MenuItem value="admin">admin</MenuItem>
+                <MenuItem value="hr">hr</MenuItem>
+                <MenuItem value="associate">associate</MenuItem>
               </Select>
             </FormControl>
           </Box>
           <Box
             sx={{
-              display: "flex",
+              display: { xs: "block", md: "flex" },
               "& > :not(style)": { mb: 1 },
               justifyContent: "space-between",
             }}
@@ -243,7 +258,7 @@ export default function UserUpdate() {
           </Box>
           <Box
             sx={{
-              display: "flex",
+              display: { xs: "block", md: "flex" },
               "& > :not(style)": { mb: 1 },
               justifyContent: "space-between",
             }}
@@ -271,7 +286,7 @@ export default function UserUpdate() {
           </Box>
           <Box
             sx={{
-              display: "flex",
+              display: { xs: "block", md: "flex" },
               "& > :not(style)": { mb: 1 },
               justifyContent: "space-between",
             }}
@@ -299,7 +314,7 @@ export default function UserUpdate() {
           </Box>
           <Box
             sx={{
-              display: "flex",
+              display: { xs: "block", md: "flex" },
               "& > :not(style)": { mb: 1 },
               justifyContent: "space-between",
             }}
@@ -327,11 +342,11 @@ export default function UserUpdate() {
           </Box>
           <Box
             sx={{
-              display: "flex",
+              display: { xs: "block", md: "flex" },
               justifyContent: "space-between",
             }}
           >
-            <InputField
+            {/* <InputField
               label=" DOB"
               type="text"
               name="dob"
@@ -340,12 +355,52 @@ export default function UserUpdate() {
               handleChange={handleChange}
               handleBlur={handleBlur}
               touched={touched}
-            />
+            /> */}
+            <Box
+              sx={{
+                position: "relative",
+                mt: "8px",
+                mb: "16px",
+                width: { xs: "100%", md: "45.5%" },
+              }}
+            >
+              <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <DemoContainer
+                  components={["DatePicker", "DatePicker", "DatePicker"]}
+                >
+                  <DatePicker
+                    label="DOB"
+                    value={dayjs(values.dob)}
+                    slotProps={{ textField: { size: "small" } }}
+                    onChange={(date) => {
+                      const formattedDate = date
+                        ? date.format("YYYY-MM-DD")
+                        : "";
+                      setFieldValue("dob", formattedDate);
+                    }}
+                  />
+                </DemoContainer>
+              </LocalizationProvider>
+              {errors.dob && touched.dob && (
+                <span
+                  style={{
+                    color: "#d32f2f",
+                    fontSize: "12px",
+                    position: "absolute",
+                    width: "100%",
+                    bottom: "-22px",
+                    left: 0,
+                  }}
+                >
+                  {errors.dob}
+                </span>
+              )}
+            </Box>
 
             <RadioGroup
               row
               name="gender"
-              sx={{ backgroundColor: "white" }}
+              sx={{ mt: { xs: "26px", md: 0 } }}
               value={values.gender} // Add this line to bind the selected value
               onChange={handleChange} // Add this line to handle changes
             >
@@ -359,12 +414,12 @@ export default function UserUpdate() {
           </Box>
           <Box
             sx={{
-              display: "flex",
+              display: { xs: "block", md: "flex" },
               "& > :not(style)": { mb: 1 },
               justifyContent: "space-between",
             }}
           >
-            <InputField
+            {/* <InputField
               label="Joining Date"
               type="text"
               name="joining_date"
@@ -373,7 +428,48 @@ export default function UserUpdate() {
               handleChange={handleChange}
               handleBlur={handleBlur}
               touched={touched}
-            />
+            /> */}
+            <Box
+              sx={{
+                position: "relative",
+                mt: "8px",
+                mb: { xs: "16px !important", md: "8px" },
+                width: { xs: "100%", md: "45.5%" },
+              }}
+              className="pradeep"
+            >
+              <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <DemoContainer
+                  components={["DatePicker", "DatePicker", "DatePicker"]}
+                >
+                  <DatePicker
+                    label="Joining Date"
+                    value={dayjs(values.joining_date)}
+                    slotProps={{ textField: { size: "small" } }}
+                    onChange={(date) => {
+                      const formattedDate = date
+                        ? date.format("YYYY-MM-DD")
+                        : "";
+                      setFieldValue("joining_date", formattedDate);
+                    }}
+                  />
+                </DemoContainer>
+              </LocalizationProvider>
+              {errors.joining_date && touched.joining_date && (
+                <Typography
+                  sx={{
+                    color: "#d32f2f",
+                    fontSize: "12px",
+                    position: "absolute",
+                    width: "100%",
+                    bottom: { xs: "-21px", md: "-19px" },
+                    left: 0,
+                  }}
+                >
+                  {errors.joining_date}
+                </Typography>
+              )}
+            </Box>
             <InputField
               label="Pan Card"
               type="text"
@@ -388,16 +484,16 @@ export default function UserUpdate() {
           <Box
             sx={{
               minWidth: 120,
-              display: "flex",
+              display: { xs: "block", md: "flex" },
               "& > :not(style)": { mt: 2 },
               justifyContent: "space-between",
             }}
           >
             <FormControl fullWidth size="small">
-              <InputLabel id="designation">Designation</InputLabel>
+              <InputLabel id="demo-simple-select-label">Designation</InputLabel>
               <Select
-                labelId="designation"
-                id="designation-select"
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
                 value={values.designation}
                 label="Designation"
                 onChange={(event) =>
@@ -416,7 +512,7 @@ export default function UserUpdate() {
               </Select>
             </FormControl>
           </Box>
-          <BtnSubmit btnName="Update" />
+          <BtnSubmit btnName="Register" />
         </form>
         {error === "" ? (
           ""

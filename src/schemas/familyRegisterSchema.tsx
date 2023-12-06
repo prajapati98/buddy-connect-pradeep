@@ -1,6 +1,5 @@
 import * as Yup from "yup";
-
-const letters = /^[a-zA-Z]{3,255}$/;
+const letters = /^[a-zA-Z]+ [a-zA-Z]{3,255}$/;
 const Number = /^(0|\+91)?\d{10}$/;
 const dob = /^\d{4}-\d{2}-\d{2}$/;
 const addressRegex = /^[a-zA-Z0-9\s,.'-]+$/;

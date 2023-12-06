@@ -27,6 +27,7 @@ import AddBankDetailsForm from "./AddBankDetailsForm";
 import BankDetailsList from "./BankDetailsList";
 import AddSalaryDetailsForm from "./AddSalaryDetailsForm";
 import SalaryDetailsList from "./SalaryDetailsList";
+import { Padding } from "@mui/icons-material";
 
 const UserInfoPage: React.FC = () => {
   enum Gender {
@@ -161,6 +162,7 @@ const UserInfoPage: React.FC = () => {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
+          height: "calc(100vh - 67px)",
         }}
       >
         <CircularProgress />
@@ -310,13 +312,17 @@ const UserInfoPage: React.FC = () => {
         >{`${selectedUserData?.first_name} ${selectedUserData?.last_name}`}</Typography>
         <Typography>{`${selectedUserData?.designation}`}</Typography>
       </Stack>
-      <Box sx={{ typography: "body1", margin: "auto" }}>
+      <Box sx={{ typography: "body1", margin: "auto", overflowX: "auto" }}>
         <TabContext value={value}>
-          <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+          <Box
+            sx={{ borderBottom: 1, borderColor: "divider", overflowX: "auto" }}
+          >
             <TabList
               onChange={handleChange}
               aria-label="lab API tabs example"
-              sx={{ justifyContent: "center" }} // Align center
+              variant="scrollable"
+              scrollButtons="auto"
+              sx={{ justifyContent: "center" }}
             >
               <Tab label="Personal Information" value="Personal" />
               <Tab label="Family Information" value="Family" />
@@ -324,7 +330,7 @@ const UserInfoPage: React.FC = () => {
               <Tab label="Salary" value="Salary" />
             </TabList>
           </Box>
-          <TabPanel value="Personal">
+          <TabPanel value="Personal" sx={{ pl: 0, pr: 0 }}>
             {/* Content for Personal Information tab */}
             <Typography variant="h5" gutterBottom>
               User Information
@@ -368,6 +374,24 @@ const UserInfoPage: React.FC = () => {
               <strong>Gender : </strong>
               {selectedUserData?.gender}
             </Typography>
+            <Typography
+              variant="body2"
+              color="textSecondary"
+              component="p"
+              sx={{ marginBottom: 1 }}
+            >
+              <strong>Date Of Birth : </strong>
+              {selectedUserData?.dob}
+            </Typography>
+            <Typography
+              variant="body2"
+              color="textSecondary"
+              component="p"
+              sx={{ marginBottom: 1 }}
+            >
+              <strong>Joining Date : </strong>
+              {selectedUserData?.joining_date}
+            </Typography>
 
             <Typography
               variant="body2"
@@ -387,28 +411,19 @@ const UserInfoPage: React.FC = () => {
             >
               <strong>Status : </strong> {selectedUserData?.status}
             </Typography>
-
-            <Typography
-              variant="body2"
-              color="textSecondary"
-              component="p"
-              sx={{ marginBottom: 1 }}
-            >
-              <strong>Joining Date : </strong>
-              {selectedUserData?.joining_date}
-            </Typography>
           </TabPanel>
-          <TabPanel value="Family">
-            {/* Content for Family Information tab */}
+          <TabPanel value="Family" sx={{ pl: 0, pr: 0 }}>
+            {/* Family Information tab */}
             <AddFamilyFrom userId={userId} onSuccess={handleUpdate} />
-            {/* Pass the familyTableUpdate state to FamilyList */}
             <FamilyList userId={userId} key={tableUpdate} />
           </TabPanel>
-          <TabPanel value="Bank">
+          <TabPanel value="Bank" sx={{ pl: 0, pr: 0 }}>
+            {/* Bank Information tab */}
             <AddBankDetailsForm userId={userId} onSuccess={handleUpdate} />
             <BankDetailsList userId={userId} key={tableUpdate} />
           </TabPanel>
-          <TabPanel value="Salary">
+          <TabPanel value="Salary" sx={{ pl: 0, pr: 0 }}>
+            {/* Salary Information tab */}
             <AddSalaryDetailsForm userId={userId} onSuccess={handleUpdate} />
             <SalaryDetailsList userId={userId} key={tableUpdate} />
           </TabPanel>

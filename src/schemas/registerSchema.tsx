@@ -15,6 +15,7 @@ export const registerSchema = Yup.object().shape({
     .max(225, "Please enter a name with 255 characters or fewer.")
     .matches(letters, "First Name is not in the correct format")
     .required("First Name is required"),
+
   last_name: Yup.string()
     .min(3, "Please enter a valid Last Name with a minimum of 3 characters.")
     .max(225, "Please enter a name with 255 characters or fewer.")
@@ -41,7 +42,11 @@ export const registerSchema = Yup.object().shape({
   contact: Yup.string()
     .matches(Number, "Contact number is not in the correct format")
     .required("Contact number is required"),
-  // Add similar custom error messages for other fields
+  country: Yup.string()
+    .min(3, "Please enter a valid country name with a minimum of 3 characters.")
+    .max(255, "Please enter a country name with 255 characters or fewer.")
+    .matches(letters, "Country name is not in the correct format.")
+    .required("Country name is required"),
   dob: Yup.string()
     .matches(dob, "Date of Birth is not in the correct format (yyyy-mm-dd)")
     .required("Date of Birth is required"),

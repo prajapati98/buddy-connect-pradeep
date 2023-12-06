@@ -20,7 +20,7 @@ const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
   return (
     <>
       <Sidebar>{children}</Sidebar>
-      <Footer />
+      {/* <Footer /> */}
     </>
   );
 };
@@ -90,7 +90,7 @@ const router = createBrowserRouter([
     ),
   },
   {
-    path: "deleted-list",
+    path: "archive",
     element: (
       <AppLayout>
         <Protected>

@@ -1,4 +1,6 @@
 import axios from "axios";
+import { LogOut } from "../utils/LogOut";
+import { useNavigate } from "react-router-dom";
 
 export const axiosClient = axios.create({
   baseURL: "https://buddy-connect.encoreskydev.com/api",
@@ -49,8 +51,12 @@ axiosClient.interceptors.response.use(
       case 400:
         return Promise.reject(error.response?.data);
       case 401:
-        return Promise.reject(error.response?.data);
+        const navigate = useNavigate();
 
+        localStorage.removeItem("user");
+        navigate("/login");
+        // unauthorizeAccess(error.response);
+        return Promise.reject(error.response?.data);
       case 403:
         return Promise.reject(error.response?.data);
 
@@ -69,6 +75,4 @@ axiosClient.interceptors.response.use(
   }
 );
 
-// const unauthorizeAccess = () => {
-//   console.log("unauthorizeAccess");
-// };
+// const unauthorizeAccess = (error: any) => {};

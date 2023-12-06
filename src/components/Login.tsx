@@ -38,7 +38,7 @@ const Login: React.FC = () => {
       flexDirection="column"
       alignItems="center"
       justifyContent="center"
-      height="100vh"
+      height="calc(100vh - 67px)"
     >
       <Box className="loginFrom">
         <img src={logo} alt="logo" className="loginFromLogo" />

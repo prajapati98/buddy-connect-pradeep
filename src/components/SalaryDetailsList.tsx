@@ -33,8 +33,19 @@ interface salaryListProps {
 const SalaryDetailsList: React.FC<salaryListProps> = ({ userId }) => {
   const dispatch = useDispatch<AppDispatch>();
   const selectedState = useSelector((state: RootState) => state.SalaryList);
+  const [loading, setLoading] = useState(false);
+
   useEffect(() => {
-    dispatch(action(userId));
+    const fetchData = async () => {
+      setLoading(true);
+      try {
+        await dispatch(action(userId));
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
   }, [dispatch, userId]);
   const [salaryListData, setSalaryListData] = useState<salaryListData[]>([]);
   useEffect(() => {
@@ -60,7 +71,7 @@ const SalaryDetailsList: React.FC<salaryListProps> = ({ userId }) => {
       </Box>
     );
   }
-  if (selectedState.loading) {
+  if (loading) {
     return (
       <Box
         sx={{
@@ -78,36 +89,36 @@ const SalaryDetailsList: React.FC<salaryListProps> = ({ userId }) => {
     <>
       {salaryListData.length !== 0 ? (
         <TableContainer component={Paper}>
-          <Table sx={{ minWidth: 650 }} aria-label="simple table">
+          <Table sx={{ minWidth: 1300 }} aria-label="simple table">
             <TableHead>
               <TableRow>
                 <TableCell>Basic Salary</TableCell>
-                <TableCell>Home Rent Allowances</TableCell>
+                {/* <TableCell>Home Rent Allowances</TableCell> */}
                 <TableCell>Conveyance Allowance</TableCell>
                 <TableCell>PF Amount</TableCell>
                 <TableCell>ESIC Amount</TableCell>
                 <TableCell>Income Tax</TableCell>
                 <TableCell>PT Amount</TableCell>
-                <TableCell>Loan</TableCell>
+                {/* <TableCell>Loan</TableCell> */}
                 <TableCell>Health Insurance</TableCell>
                 <TableCell>Appraisal Date</TableCell>
-                <TableCell>Utility Allowance</TableCell>
+                {/* <TableCell>Utility Allowance</TableCell> */}
               </TableRow>
             </TableHead>
             <TableBody>
               {salaryListData.map((row) => (
                 <TableRow key={row.id}>
                   <TableCell>{`${row.basic_salary}`}</TableCell>
-                  <TableCell>{row.home_rent_allowances}</TableCell>
+                  {/* <TableCell>{row.home_rent_allowances}</TableCell> */}
                   <TableCell>{row.conveyance_allowance}</TableCell>
                   <TableCell>{row.pf_amount}</TableCell>
                   <TableCell>{row.esic_amount}</TableCell>
                   <TableCell>{row.income_tax}</TableCell>
                   <TableCell>{row.pt_amount}</TableCell>
-                  <TableCell>{row.loan}</TableCell>
+                  {/* <TableCell>{row.loan}</TableCell> */}
                   <TableCell>{row.health_insurance}</TableCell>
                   <TableCell>{row.appraisal_date}</TableCell>
-                  <TableCell>{row.utility_allowance}</TableCell>
+                  {/* <TableCell>{row.utility_allowance}</TableCell> */}
                 </TableRow>
               ))}
             </TableBody>

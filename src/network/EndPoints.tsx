@@ -15,7 +15,7 @@ export const USER_ENDPOINT = {
   ADD_BANK_DETAILS: `${apiPrefix}/bank/addBankDetail.php`,
   GET_BANK_DETAILS: `${apiPrefix}/bank/getBankDetails.php`,
   DELETE_BANK_DETAILS: `${apiPrefix}/bank/deleteBankDetail.php`,
-  // SET_ACTIVE_ACCOUNT: `${apiPrefix}/bank/setAccountType.php`,
+  SET_PRIMARY_ACCOUNT: `${apiPrefix}/bank/setAccountType.php`,
   ADD_SALARY_DETAILS: `${apiPrefix}/salary/addSalaryDetail.php`,
   GET_SALARY_DETAILS: `${apiPrefix}/salary/getSalaryDetails.php`,
   GET_DELETED_DETAILS: `${apiPrefix}/user/deletedUsers.php`,

@@ -139,7 +139,11 @@ const AddSalaryDetailsForm: React.FC<AddFamilyFormProps> = ({
         open={open}
         fullWidth
       >
-        <Box sx={{ padding: "30px" }}>
+        <Box
+          sx={{
+            padding: { sx: 0, sm: "30px" },
+          }}
+        >
           <DialogTitle sx={{ m: 0, p: 2 }} id="customized-dialog-title">
             Add Salary Details
           </DialogTitle>

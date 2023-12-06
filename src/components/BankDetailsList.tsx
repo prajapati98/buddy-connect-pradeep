@@ -15,8 +15,17 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
-import { Alert, Box, Button, CircularProgress, Stack } from "@mui/material";
-import { deleteBankDetails } from "../network/user";
+import {
+  Alert,
+  Box,
+  Button,
+  CircularProgress,
+  FormControlLabel,
+  Radio,
+  Stack,
+  Switch,
+} from "@mui/material";
+import { deleteBankDetails, setPrimaryAccount } from "../network/user";
 enum typeAccount {
   primary = "primary",
   secondary = "secondary",
@@ -41,8 +50,21 @@ interface BankListProps {
 const BankDetailsList: React.FC<BankListProps> = ({ userId }) => {
   const dispatch = useDispatch<AppDispatch>();
   const selectedState = useSelector((state: RootState) => state.BankList);
+  const [loading, setLoading] = useState(false);
+  const [currentBankId, setCurrentBankId] = useState("");
+  const [btnDisable, setBtnDisable] = useState(false);
+
   useEffect(() => {
-    dispatch(action(userId));
+    const fetchData = async () => {
+      setLoading(true);
+      try {
+        await dispatch(action(userId));
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
   }, [dispatch, userId]);
 
   const [bankListData, setBankListData] = useState<bankListData[]>([]);
@@ -89,6 +111,38 @@ const BankDetailsList: React.FC<BankListProps> = ({ userId }) => {
     }
   }, [selectedState, userId]);
 
+  const handleSetAccountChange = async (
+    event: React.ChangeEvent<HTMLInputElement>,
+    bankId: string
+  ) => {
+    setCurrentBankId(bankId);
+    setBtnDisable(true);
+    const newType: typeAccount = event.target.checked
+      ? ("primary" as typeAccount)
+      : ("secondary" as typeAccount);
+    try {
+      const response = await setPrimaryAccount(userId, bankId, {
+        type_account: newType,
+      });
+      if (response.status === 200) {
+        setBtnDisable(false);
+        setError("");
+        setBankListData((prevBankListData) => {
+          return prevBankListData.map((bankDetails) =>
+            bankDetails.id === bankId
+              ? { ...bankDetails, type_account: newType }
+              : { ...bankDetails, type_account: typeAccount.secondary }
+          );
+        });
+      }
+    } catch (error: any) {
+      setError(error.message);
+      console.log("update user Status", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   if (selectedState.isError) {
     return (
       <Box
@@ -106,7 +160,7 @@ const BankDetailsList: React.FC<BankListProps> = ({ userId }) => {
       </Box>
     );
   }
-  if (selectedState.loading) {
+  if (loading) {
     return (
       <Box
         sx={{
@@ -132,7 +186,10 @@ const BankDetailsList: React.FC<BankListProps> = ({ userId }) => {
       )}
       {bankListData.length !== 0 ? (
         <TableContainer component={Paper}>
-          <Table sx={{ minWidth: 650 }} aria-label="simple table">
+          <Table
+            sx={{ minWidth: 1300, overflowX: "scroll" }}
+            aria-label="simple table"
+          >
             <TableHead>
               <TableRow>
                 <TableCell>Bank Name</TableCell>
@@ -141,7 +198,8 @@ const BankDetailsList: React.FC<BankListProps> = ({ userId }) => {
                 <TableCell>IFC Code</TableCell>
                 <TableCell>MICR Code</TableCell>
                 <TableCell>CIF Code</TableCell>
-                <TableCell>type_account</TableCell>
+                <TableCell>Type Account</TableCell>
+                <TableCell> Set Primary</TableCell>
                 <TableCell>Delete</TableCell>
               </TableRow>
             </TableHead>
@@ -155,12 +213,29 @@ const BankDetailsList: React.FC<BankListProps> = ({ userId }) => {
                   <TableCell>{row.micr_code}</TableCell>
                   <TableCell>{row.cif_code}</TableCell>
                   <TableCell>{row.type_account}</TableCell>
+                  <TableCell>
+                    <FormControlLabel
+                      control={
+                        <Radio
+                          sx={{ m: 1 }}
+                          inputProps={{ "aria-label": "controlled" }}
+                          checked={row.type_account === "primary"}
+                          onChange={(event) =>
+                            handleSetAccountChange(event, row.id)
+                          }
+                          id={row.id}
+                        />
+                      }
+                      label="Set as primary"
+                    />
+                  </TableCell>
 
                   <TableCell>
                     <Button
                       variant="contained"
                       color="error"
                       onClick={() => handleDelete(parseInt(row.id))}
+                      disabled={btnDisable && currentBankId === row.id}
                     >
                       Delete
                     </Button>

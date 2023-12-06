@@ -92,11 +92,19 @@ export default function RegisterUser() {
 
   return (
     <Box display="flex" flexDirection="column" alignItems="center">
-      <Box className="RegistrationFrom">
+      <Box
+        sx={{
+          width: { xs: "100%", md: "550px" },
+          minWidth: "250px",
+          boxShadow: "0px 4px 15px 0px rgba(0, 0, 0, 0.15)",
+          padding: "20px 20px",
+          borderRadius: "10px",
+        }}
+      >
         <Typography
           variant="h5"
           sx={{
-            fontSize: "30px",
+            fontSize: { xs: "20px", sm: "30px" },
             fontWeight: "700",
             textAlign: "center",
             marginBottom: "20px",
@@ -107,7 +115,7 @@ export default function RegisterUser() {
         <form onSubmit={handleSubmit} style={{ width: "100%" }}>
           <Box
             sx={{
-              display: "flex",
+              display: { xs: "block", md: "flex" },
               alignItems: "center",
               justifyContent: "space-between",
             }}
@@ -125,9 +133,12 @@ export default function RegisterUser() {
             />
             <FormControl
               sx={{
-                width: "46%",
+                width: { xs: "100%", md: "46%" },
+                mt: { xs: "16px", md: 0 },
+                mb: { xs: "16px", md: 0 },
               }}
               size="small"
+              className="pppppppp"
             >
               <InputLabel id="select-role">Role</InputLabel>
               <Select
@@ -148,7 +159,7 @@ export default function RegisterUser() {
           </Box>
           <Box
             sx={{
-              display: "flex",
+              display: { xs: "block", md: "flex" },
               "& > :not(style)": { mb: 1 },
               justifyContent: "space-between",
             }}
@@ -176,7 +187,7 @@ export default function RegisterUser() {
           </Box>
           <Box
             sx={{
-              display: "flex",
+              display: { xs: "block", md: "flex" },
               "& > :not(style)": { mb: 1 },
               justifyContent: "space-between",
             }}
@@ -204,7 +215,7 @@ export default function RegisterUser() {
           </Box>
           <Box
             sx={{
-              display: "flex",
+              display: { xs: "block", md: "flex" },
               "& > :not(style)": { mb: 1 },
               justifyContent: "space-between",
             }}
@@ -232,7 +243,7 @@ export default function RegisterUser() {
           </Box>
           <Box
             sx={{
-              display: "flex",
+              display: { xs: "block", md: "flex" },
               "& > :not(style)": { mb: 1 },
               justifyContent: "space-between",
             }}
@@ -260,7 +271,7 @@ export default function RegisterUser() {
           </Box>
           <Box
             sx={{
-              display: "flex",
+              display: { xs: "block", md: "flex" },
               justifyContent: "space-between",
             }}
           >
@@ -279,7 +290,7 @@ export default function RegisterUser() {
                 position: "relative",
                 mt: "8px",
                 mb: "16px",
-                width: "45.5%",
+                width: { xs: "100%", md: "45.5%" },
               }}
             >
               <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -317,7 +328,7 @@ export default function RegisterUser() {
             <RadioGroup
               row
               name="gender"
-              sx={{}}
+              sx={{ mt: { xs: "26px", md: 0 } }}
               value={values.gender} // Add this line to bind the selected value
               onChange={handleChange} // Add this line to handle changes
             >
@@ -331,7 +342,7 @@ export default function RegisterUser() {
           </Box>
           <Box
             sx={{
-              display: "flex",
+              display: { xs: "block", md: "flex" },
               "& > :not(style)": { mb: 1 },
               justifyContent: "space-between",
             }}
@@ -350,8 +361,10 @@ export default function RegisterUser() {
               sx={{
                 position: "relative",
                 mt: "8px",
-                width: "45.5%",
+                mb: { xs: "16px !important", md: "8px" },
+                width: { xs: "100%", md: "45.5%" },
               }}
+              className="pradeep"
             >
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <DemoContainer
@@ -369,18 +382,18 @@ export default function RegisterUser() {
                 </DemoContainer>
               </LocalizationProvider>
               {errors.joining_date && touched.joining_date && (
-                <span
-                  style={{
+                <Typography
+                  sx={{
                     color: "#d32f2f",
                     fontSize: "12px",
                     position: "absolute",
                     width: "100%",
-                    bottom: "-7px",
+                    bottom: { xs: "-21px", md: "-19px" },
                     left: 0,
                   }}
                 >
                   {errors.joining_date}
-                </span>
+                </Typography>
               )}
             </Box>
             <InputField
@@ -397,7 +410,7 @@ export default function RegisterUser() {
           <Box
             sx={{
               minWidth: 120,
-              display: "flex",
+              display: { xs: "block", md: "flex" },
               "& > :not(style)": { mt: 2 },
               justifyContent: "space-between",
             }}

@@ -4,7 +4,6 @@ import {
   deleteRequest,
   putRequest,
   patchRequest,
-  patchRequestActiveAccount,
 } from "./ApiRequest";
 import { USER_ENDPOINT } from "./EndPoints";
 
@@ -31,7 +30,7 @@ export const deleteUser = (id: string) => {
 export const updatePersonalDetail = (payload: any, id: number) => {
   return putRequest(`${USER_ENDPOINT.UPDATE_SINGLE_USER}?id=${id}`, payload);
 };
-export const updateUserStatus = (payload: any, id: string) => {
+export const updateUserStatus = (id: string, payload: any) => {
   return patchRequest(
     `${USER_ENDPOINT.UPDATE_USER_STATUS}?user_id=${id}`,
     payload
@@ -74,14 +73,17 @@ export const deleteBankDetails = (
   );
 };
 
-// export const setActiveAccount = (
-//   id: number | undefined,
-//   bank_id: number | undefined
-// ) => {
-//   return patchRequestActiveAccount(
-//     `${USER_ENDPOINT.SET_ACTIVE_ACCOUNT}?user_id=${id}&bank_id=${bank_id}`
-//   );
-// };
+export const setPrimaryAccount = (
+  id: number | undefined,
+  bank_id: string | undefined,
+  payload: any
+) => {
+  console.log(payload, "payload");
+  return patchRequest(
+    `${USER_ENDPOINT.SET_PRIMARY_ACCOUNT}?user_id=${id}&bank_id=${bank_id}`,
+    payload
+  );
+};
 
 export const addSalaryDetails = (payload: any, id: number) => {
   return postRequest(

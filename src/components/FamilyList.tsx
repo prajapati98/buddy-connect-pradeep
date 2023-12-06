@@ -41,8 +41,18 @@ interface FamilyListProps {
 const FamilyList: React.FC<FamilyListProps> = ({ userId }) => {
   const dispatch = useDispatch<AppDispatch>();
   const selectedState = useSelector((state: RootState) => state.FamilyList);
+  const [loading, setLoading] = useState(false);
   useEffect(() => {
-    dispatch(action(userId));
+    const fetchData = async () => {
+      setLoading(true);
+      try {
+        await dispatch(action(userId));
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
   }, [dispatch, userId]);
 
   const [familyListData, setFamilyListData] = useState<familyListData[]>([]);
@@ -58,7 +68,7 @@ const FamilyList: React.FC<FamilyListProps> = ({ userId }) => {
   const handleConfirmDelete = async () => {
     if (memberDelete !== undefined) {
       try {
-        const response = await deleteFamilyMembers(userId, memberDelete);
+        await deleteFamilyMembers(userId, memberDelete);
       } catch (error: any) {
         console.log(error);
       }
@@ -95,7 +105,7 @@ const FamilyList: React.FC<FamilyListProps> = ({ userId }) => {
       </Box>
     );
   }
-  if (selectedState.loading) {
+  if (loading) {
     return (
       <Box
         sx={{
@@ -114,7 +124,10 @@ const FamilyList: React.FC<FamilyListProps> = ({ userId }) => {
       {" "}
       {familyListData.length !== 0 ? (
         <TableContainer component={Paper}>
-          <Table sx={{ minWidth: 650 }} aria-label="simple table">
+          <Table
+            sx={{ minWidth: 1300, overflowX: "scroll" }}
+            aria-label="simple table"
+          >
             <TableHead>
               <TableRow>
                 <TableCell>Name</TableCell>

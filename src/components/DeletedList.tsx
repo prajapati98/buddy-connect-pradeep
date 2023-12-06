@@ -77,6 +77,7 @@ const DeletedList: React.FC = () => {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
+          height: "calc(100vh - 67px)",
         }}
       >
         <CircularProgress />
@@ -85,8 +86,8 @@ const DeletedList: React.FC = () => {
   }
   return (
     <>
-      <TableContainer component={Paper}>
-        <Table sx={{ minWidth: 650 }} aria-label="simple table">
+      <TableContainer component={Paper} sx={{ overflowX: "auto" }}>
+        <Table sx={{ minWidth: 1200 }} aria-label="simple table">
           <TableHead>
             <TableRow>
               <TableCell>S. NO.</TableCell>
@@ -94,21 +95,21 @@ const DeletedList: React.FC = () => {
               <TableCell>Email</TableCell>
               <TableCell>Date of Birth</TableCell>
               <TableCell>Gender</TableCell>
-              <TableCell>City</TableCell>
+              {/* <TableCell>City</TableCell>
               <TableCell>State</TableCell>
               <TableCell>Country</TableCell>
               <TableCell>Contact</TableCell>
               <TableCell>Zip Code</TableCell>
               <TableCell>Address</TableCell>
-              <TableCell>Role</TableCell>
+              <TableCell>Role</TableCell> */}
               <TableCell>Designation</TableCell>
-              <TableCell>Access Token</TableCell>
+              {/* <TableCell>Access Token</TableCell> */}
               <TableCell>Joining Date</TableCell>
-              <TableCell>Pan Card </TableCell>
+              {/* <TableCell>Pan Card </TableCell>
               <TableCell>Status </TableCell>
               <TableCell>Type User </TableCell>
               <TableCell>Created At</TableCell>
-              <TableCell>Updated At</TableCell>
+              <TableCell>Updated At</TableCell> */}
             </TableRow>
           </TableHead>
           <TableBody>
@@ -116,25 +117,29 @@ const DeletedList: React.FC = () => {
               <TableRow key={row.id}>
                 <TableCell>{index + 1}</TableCell>
 
-                <TableCell>{`${row.first_name} ${row.last_name}`}</TableCell>
+                <TableCell
+                  sx={{
+                    width: "100px",
+                  }}
+                >{`${row.first_name} ${row.last_name}`}</TableCell>
                 <TableCell>{row.email}</TableCell>
                 <TableCell>{row.dob}</TableCell>
                 <TableCell>{row.gender}</TableCell>
-                <TableCell>{row.city}</TableCell>
+                {/* <TableCell>{row.city}</TableCell>
                 <TableCell>{row.state}</TableCell>
                 <TableCell>{row.country}</TableCell>
                 <TableCell>{row.contact}</TableCell>
                 <TableCell>{row.zip_code}</TableCell>
                 <TableCell>{row.address}</TableCell>
-                <TableCell>{row.role}</TableCell>
+                <TableCell>{row.role}</TableCell> */}
                 <TableCell>{row.designation}</TableCell>
-                <TableCell>{row.access_token}</TableCell>
+                {/* <TableCell>{row.access_token}</TableCell> */}
                 <TableCell>{row.joining_date}</TableCell>
-                <TableCell>{row.pan_card}</TableCell>
+                {/* <TableCell>{row.pan_card}</TableCell>
                 <TableCell>{row.status}</TableCell>
                 <TableCell>{row.type_user}</TableCell>
                 <TableCell>{row.created_at}</TableCell>
-                <TableCell>{row.updated_at}</TableCell>
+                <TableCell>{row.updated_at}</TableCell> */}
               </TableRow>
             ))}
           </TableBody>

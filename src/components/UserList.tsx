@@ -57,7 +57,8 @@ const UserList = () => {
 
   const [userListData, setUserListData] = useState<UserListData[]>([]);
   const [userDelete, setUserDelete] = useState<string>("");
-  const [loading, setLoading] = React.useState<boolean>(false);
+  const [currentUserId, setCurrentUserId] = useState("");
+  const [btnDisable, setBtnDisable] = useState(false);
 
   useEffect(() => {
     // Assuming selectedState contains an array of data
@@ -102,13 +103,16 @@ const UserList = () => {
     userId: string,
     currentStatus: string
   ) => {
-    setLoading(true);
+    setBtnDisable(true);
+    setCurrentUserId(userId);
     const newStatus: string = event.target.checked ? "active" : "deActive";
     try {
-      const response = await updateUserStatus(newStatus, userId);
+      const response = await updateUserStatus(userId, {
+        status: newStatus,
+      });
       if (response.status === 200) {
         setError("");
-        setLoading(false);
+        setBtnDisable(false);
         setUserListData((prevUserListData) => {
           return prevUserListData.map((user) =>
             user.id === userId ? { ...user, status: newStatus } : user
@@ -119,18 +123,18 @@ const UserList = () => {
       setError(error.message);
       console.log("update user Status", error);
     } finally {
-      setLoading(false);
+      setBtnDisable(false);
     }
   };
 
-  if (userListData.length === 0 && selectedState.loading) {
+  if (selectedState.loading) {
     return (
       <Box
         sx={{
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          height: "100vh",
+          height: "calc( 100vh - 67px)",
         }}
       >
         <CircularProgress />
@@ -138,102 +142,111 @@ const UserList = () => {
     );
   }
   return (
-    <TableContainer component={Paper}>
-      <Table sx={{ minWidth: 650 }} aria-label="simple table">
-        <TableHead>
-          <TableRow>
-            <TableCell>Profile</TableCell>
-            <TableCell>Full Name</TableCell>
-            <TableCell>Email</TableCell>
-            <TableCell>Designation</TableCell>
-            <TableCell>Active / Deactivate</TableCell>
-            <TableCell>View</TableCell>
-            <TableCell>Update</TableCell>
-            <TableCell>Delete</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {userListData.map((row) => (
-            <TableRow key={row.id}>
-              <TableCell>
-                <Stack direction="row" spacing={2}>
-                  <Avatar
-                    alt="Avatar"
-                    src={row?.image ? `${IMGURL}${row.image}` : avatar}
-                    sx={{ width: 50, height: 50 }}
-                  />
-                </Stack>
-              </TableCell>
-              <TableCell>{`${row.first_name} ${row.last_name} `}</TableCell>
-              <TableCell>{row.email}</TableCell>
-              <TableCell>{row.designation}</TableCell>
-              <TableCell>
-                <FormControlLabel
-                  control={
-                    <Switch
-                      sx={{ m: 1 }}
-                      inputProps={{ "aria-label": "controlled" }}
-                      checked={row.status === "active"}
-                      onChange={(event) =>
-                        handleSwitchChange(event, row.id, row.status)
+    <>
+      {userListData.length !== 0 ? (
+        <TableContainer component={Paper}>
+          <Table sx={{ minWidth: 1300 }} aria-label="simple table">
+            <TableHead>
+              <TableRow>
+                <TableCell>Profile</TableCell>
+                <TableCell>Full Name</TableCell>
+                <TableCell>Email</TableCell>
+                <TableCell>Designation</TableCell>
+                <TableCell>Active / Deactivate</TableCell>
+                <TableCell>View</TableCell>
+                <TableCell>Update</TableCell>
+                <TableCell>Delete</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {userListData.map((row) => (
+                <TableRow key={row.id}>
+                  <TableCell>
+                    <Stack direction="row" spacing={2}>
+                      <Avatar
+                        alt="Avatar"
+                        src={row?.image ? `${IMGURL}${row.image}` : avatar}
+                        sx={{ width: 50, height: 50 }}
+                      />
+                    </Stack>
+                  </TableCell>
+                  <TableCell>{`${row.first_name} ${row.last_name} `}</TableCell>
+                  <TableCell>{row.email}</TableCell>
+                  <TableCell>{row.designation}</TableCell>
+                  <TableCell>
+                    <FormControlLabel
+                      control={
+                        <Switch
+                          sx={{ m: 1 }}
+                          inputProps={{ "aria-label": "controlled" }}
+                          checked={row.status === "active"}
+                          onChange={(event) =>
+                            handleSwitchChange(event, row.id, row.status)
+                          }
+                          id={row.id}
+                        />
                       }
-                      id={row.id}
+                      label=""
                     />
-                  }
-                  label=""
-                />
-              </TableCell>
-              <TableCell>
-                <Link to={`/UserInfoPage/${row.id}`}>
-                  <Button variant="contained" disabled={loading}>
-                    View
-                  </Button>
-                </Link>
-              </TableCell>
-              <TableCell>
-                <Link to={`/UserUpdate/${row.id}`}>
-                  <Button
-                    variant="contained"
-                    color="warning"
-                    disabled={loading}
-                  >
-                    Update
-                  </Button>
-                </Link>
-              </TableCell>
-              <TableCell>
-                <Button
-                  variant="contained"
-                  color="error"
-                  disabled={loading}
-                  onClick={() => handleDelete(row.id)}
-                >
-                  Delete
+                  </TableCell>
+                  <TableCell>
+                    <Link to={`/UserInfoPage/${row.id}`}>
+                      <Button
+                        variant="contained"
+                        disabled={btnDisable && row.id === currentUserId}
+                      >
+                        View
+                      </Button>
+                    </Link>
+                  </TableCell>
+                  <TableCell>
+                    <Link to={`/UserUpdate/${row.id}`}>
+                      <Button
+                        variant="contained"
+                        color="warning"
+                        disabled={btnDisable && row.id === currentUserId}
+                      >
+                        Update
+                      </Button>
+                    </Link>
+                  </TableCell>
+                  <TableCell>
+                    <Button
+                      variant="contained"
+                      color="error"
+                      disabled={btnDisable && row.id === currentUserId}
+                      onClick={() => handleDelete(row.id)}
+                    >
+                      Delete
+                    </Button>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+          <Box>
+            <Dialog open={dialogOpen} onClose={handleClose} maxWidth="xs">
+              <DialogTitle>Delete Confirmation</DialogTitle>
+              <DialogContent>
+                <DialogContentText>
+                  Are you sure you want to delete this user?
+                </DialogContentText>
+              </DialogContent>
+              <DialogActions>
+                <Button onClick={handleClose} color="primary">
+                  Cancel
                 </Button>
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-      <Box>
-        <Dialog open={dialogOpen} onClose={handleClose} maxWidth="xs">
-          <DialogTitle>Delete Confirmation</DialogTitle>
-          <DialogContent>
-            <DialogContentText>
-              Are you sure you want to delete this user?
-            </DialogContentText>
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={handleClose} color="primary">
-              Cancel
-            </Button>
-            <Button onClick={handleConfirmDelete} color="primary">
-              DELETE
-            </Button>
-          </DialogActions>
-        </Dialog>
-      </Box>
-    </TableContainer>
+                <Button onClick={handleConfirmDelete} color="primary">
+                  DELETE
+                </Button>
+              </DialogActions>
+            </Dialog>
+          </Box>
+        </TableContainer>
+      ) : (
+        ""
+      )}
+    </>
   );
 };
 

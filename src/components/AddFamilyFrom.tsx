@@ -9,6 +9,11 @@ import CloseIcon from "@mui/icons-material/Close";
 import { useFormik } from "formik";
 import AddIcon from "@mui/icons-material/Add";
 import InputField from "./InputField";
+import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import dayjs from "dayjs";
 import {
   Alert,
   Box,
@@ -23,6 +28,7 @@ import MenuItem from "@mui/material/MenuItem";
 import BtnSubmit from "./BtnSubmit";
 import { familyRegisterSchema } from "../schemas/familyRegisterSchema";
 import { AddFamilyMember } from "../network/user";
+
 enum Gender {
   Male = "male",
   Female = "female",
@@ -32,7 +38,7 @@ export interface FormData {
   name: string;
   relation: string;
   contact: string;
-  dob: string;
+  dob: string | null;
   address: string;
   gender: Gender.Male;
 }
@@ -55,7 +61,7 @@ interface ApiResponse {
 }
 interface AddFamilyFormProps {
   userId: number | undefined;
-  onSuccess: () => void; // Add this prop
+  onSuccess: () => void;
 }
 const AddFamilyFrom: React.FC<AddFamilyFormProps> = ({ userId, onSuccess }) => {
   const [open, setOpen] = React.useState(false);
@@ -83,7 +89,7 @@ const AddFamilyFrom: React.FC<AddFamilyFormProps> = ({ userId, onSuccess }) => {
     relation: "",
     address: "",
     contact: "",
-    dob: "",
+    dob: null,
     gender: Gender.Male,
   };
 
@@ -143,7 +149,11 @@ const AddFamilyFrom: React.FC<AddFamilyFormProps> = ({ userId, onSuccess }) => {
         open={open}
         fullWidth
       >
-        <Box sx={{ padding: "30px" }}>
+        <Box
+          sx={{
+            padding: { sx: 0, sm: "30px" },
+          }}
+        >
           <DialogTitle sx={{ m: 0, p: 2 }} id="customized-dialog-title">
             Add Family Member
           </DialogTitle>
@@ -181,7 +191,7 @@ const AddFamilyFrom: React.FC<AddFamilyFormProps> = ({ userId, onSuccess }) => {
                 handleBlur={handleBlur}
                 touched={touched}
               />
-              <InputField
+              {/* <InputField
                 label=" DOB"
                 type="text"
                 name="dob"
@@ -190,7 +200,45 @@ const AddFamilyFrom: React.FC<AddFamilyFormProps> = ({ userId, onSuccess }) => {
                 handleChange={handleChange}
                 handleBlur={handleBlur}
                 touched={touched}
-              />
+              /> */}
+              <Box
+                sx={{
+                  position: "relative",
+                  mt: "8px",
+                  mb: "16px",
+                }}
+              >
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <DemoContainer
+                    components={["DatePicker", "DatePicker", "DatePicker"]}
+                  >
+                    <DatePicker
+                      label="DOB"
+                      value={values.dob}
+                      slotProps={{ textField: { size: "small" } }}
+                      onChange={(date) => {
+                        const formattedDate = dayjs(date).format("YYYY-MM-DD");
+
+                        setFieldValue("dob", formattedDate);
+                      }}
+                    />
+                  </DemoContainer>
+                </LocalizationProvider>
+                {errors.dob && touched.dob && (
+                  <span
+                    style={{
+                      color: "#d32f2f",
+                      fontSize: "12px",
+                      position: "absolute",
+                      width: "100%",
+                      bottom: "-22px",
+                      left: 0,
+                    }}
+                  >
+                    {errors.dob}
+                  </span>
+                )}
+              </Box>
               <InputField
                 label="Address"
                 type="text"

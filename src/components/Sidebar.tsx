@@ -21,7 +21,7 @@ import { Link, NavLink, useNavigate } from "react-router-dom";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import LogoutIcon from "@mui/icons-material/Logout";
-import { Button, Stack } from "@mui/material";
+import { Button, Stack, useMediaQuery } from "@mui/material";
 import { logout } from "../features/login/loginSlice";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "../store";
@@ -111,8 +111,8 @@ type MiniDrawerProps = {
 
 export default function MiniDrawer({ children }: MiniDrawerProps) {
   const theme = useTheme();
-  const [open, setOpen] = React.useState(true);
-
+  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
+  const [open, setOpen] = React.useState(!isMobile);
   const handleDrawerOpen = () => {
     setOpen(true);
   };
@@ -171,7 +171,23 @@ export default function MiniDrawer({ children }: MiniDrawerProps) {
               margin: 0,
             }}
           >
-            <img src={logo} alt="logo" className="loginFromLogo" />
+            <Box
+              sx={{
+                width: { xs: 100, sm: 163 },
+                height: { xs: "30px", sm: " 64px" },
+
+                marginBottom: "7px",
+              }}
+            >
+              <img
+                src={logo}
+                alt="logo"
+                className="logo"
+                style={{
+                  maxWidth: "100%",
+                }}
+              />
+            </Box>
           </Link>
           <Box
             sx={{
@@ -192,12 +208,21 @@ export default function MiniDrawer({ children }: MiniDrawerProps) {
                 direction="row"
                 spacing={2}
                 sx={{
-                  mr: 2,
+                  mr: { xs: 0, sm: 2 },
                 }}
               >
-                <Avatar alt={user.first_name} src={avatar2} />
+                <Avatar
+                  alt={user.first_name}
+                  src={avatar2}
+                  sx={{
+                    height: { xs: "32px", md: "40px" },
+                    width: { xs: "32px", md: "40px" },
+                  }}
+                />
               </Stack>
-              {user.first_name + " " + user.last_name}
+              <Box sx={{ display: { xs: "none", sm: "block" } }}>
+                {user.first_name + " " + user.last_name}
+              </Box>
             </Button>
             <Menu
               id="basic-menu"
@@ -263,9 +288,9 @@ export default function MiniDrawer({ children }: MiniDrawerProps) {
               path: "/register-user",
             },
             {
-              text: "Deleted List",
+              text: "Archive",
               icon: <DeleteSweepIcon />,
-              path: "/deleted-list",
+              path: "/archive",
             },
           ].map(({ text, icon, path }, index) => (
             <ListItem key={text} disablePadding sx={{ display: "block" }}>
@@ -293,28 +318,27 @@ export default function MiniDrawer({ children }: MiniDrawerProps) {
           ))}
         </List>
       </Drawer>
-      <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
+      <Box component="main" sx={{ flexGrow: 1, p: 3, overflowX: "auto" }}>
         <DrawerHeader />
         {children}
-      </Box>
-      <Box>
-        <Button onClick={handleLogout}>Logout</Button>
-        <Dialog open={dialogOpen} onClose={handleClose} maxWidth="xs">
-          <DialogTitle>Logout Confirmation</DialogTitle>
-          <DialogContent>
-            <DialogContentText>
-              Are you sure you want to log out?
-            </DialogContentText>
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={handleClose} color="primary">
-              Cancel
-            </Button>
-            <Button onClick={handleConfirmLogout} color="primary">
-              Logout
-            </Button>
-          </DialogActions>
-        </Dialog>
+        <Box>
+          <Dialog open={dialogOpen} onClose={handleClose} maxWidth="xs">
+            <DialogTitle>Logout Confirmation</DialogTitle>
+            <DialogContent>
+              <DialogContentText>
+                Are you sure you want to log out?
+              </DialogContentText>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={handleClose} color="primary">
+                Cancel
+              </Button>
+              <Button onClick={handleConfirmLogout} color="primary">
+                Logout
+              </Button>
+            </DialogActions>
+          </Dialog>
+        </Box>
       </Box>
     </Box>
   );
