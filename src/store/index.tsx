@@ -2,7 +2,7 @@ import { configureStore } from "@reduxjs/toolkit";
 import loginSlice from "../features/login/loginSlice";
 import addNewUserSlice from "../features/user/addNewUserSlice";
 import userListSlice from "../features/userList/userListSlice";
-import singleUserSlice from "../features/ singleUser /singleUserSlice";
+import singleUserSlice from "../features/singleUser/singleUserSlice";
 import familyListSlice from "../features/getFamily/familyListSlice";
 import BankListSlice from "../features/getBankDetails/BankListSlice";
 import SalaryListSlice from "../features/getSalary/SalaryListSlice";

@@ -16,7 +16,6 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import logo from "../assets/image/logo.png";
 import FeaturedPlayListIcon from "@mui/icons-material/FeaturedPlayList";
-import PersonIcon from "@mui/icons-material/Person";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
@@ -34,6 +33,7 @@ import Avatar from "@mui/material/Avatar";
 import avatar2 from "../assets/image/avatar2.png";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import DeleteSweepIcon from "@mui/icons-material/DeleteSweep";
+import PersonAddAltIcon from "@mui/icons-material/PersonAddAlt";
 
 const drawerWidth = 240;
 
@@ -278,17 +278,17 @@ export default function MiniDrawer({ children }: MiniDrawerProps) {
               path: "/",
             },
             {
-              text: "Users List",
+              text: "Users",
               icon: <FeaturedPlayListIcon />,
               path: "/user-list",
             },
             {
-              text: "Register New User",
-              icon: <PersonIcon />,
+              text: "New User Register",
+              icon: <PersonAddAltIcon />,
               path: "/register-user",
             },
             {
-              text: "Archive",
+              text: "Former Users",
               icon: <DeleteSweepIcon />,
               path: "/archive",
             },

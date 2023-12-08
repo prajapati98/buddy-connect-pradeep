@@ -15,7 +15,7 @@ import { registerSchema } from "../schemas/registerSchema";
 import { AppDispatch, RootState } from "../store";
 import { useDispatch, useSelector } from "react-redux";
 import { action } from "../features/user/action";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
@@ -439,6 +439,13 @@ export default function RegisterUser() {
             </FormControl>
           </Box>
           <BtnSubmit btnName="Register" />
+          <Typography sx={{ mt: 2 }}>
+            If you do not want to register
+            <Link to="/" style={{ color: "#1976d2" }}>
+              {" "}
+              Go To Home
+            </Link>
+          </Typography>
         </form>
         {selectedState.isError ? (
           <Alert

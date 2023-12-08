@@ -1,12 +1,8 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { userInfo } from "../../network/user";
-import { Console } from "console";
-interface User {
-  username: string;
-}
 
 interface LoginState {
-  user: User | null;
+  user: string | null;
   loading: boolean;
   isError: boolean;
   errorMessage: null | string;

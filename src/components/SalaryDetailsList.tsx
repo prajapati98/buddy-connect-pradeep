@@ -90,18 +90,38 @@ const SalaryDetailsList: React.FC<salaryListProps> = ({ userId }) => {
       {salaryListData.length !== 0 ? (
         <TableContainer component={Paper}>
           <Table sx={{ minWidth: 1300 }} aria-label="simple table">
-            <TableHead>
+            <TableHead
+              sx={{
+                backgroundColor: "#1976d2",
+              }}
+            >
               <TableRow>
-                <TableCell>Basic Salary</TableCell>
+                <TableCell sx={{ color: "#fff", fontSize: "18px" }}>
+                  Basic Salary
+                </TableCell>
                 {/* <TableCell>Home Rent Allowances</TableCell> */}
-                <TableCell>Conveyance Allowance</TableCell>
-                <TableCell>PF Amount</TableCell>
-                <TableCell>ESIC Amount</TableCell>
-                <TableCell>Income Tax</TableCell>
-                <TableCell>PT Amount</TableCell>
+                <TableCell sx={{ color: "#fff", fontSize: "18px" }}>
+                  Conveyance Allowance
+                </TableCell>
+                <TableCell sx={{ color: "#fff", fontSize: "18px" }}>
+                  PF Amount
+                </TableCell>
+                <TableCell sx={{ color: "#fff", fontSize: "18px" }}>
+                  ESIC Amount
+                </TableCell>
+                <TableCell sx={{ color: "#fff", fontSize: "18px" }}>
+                  Income Tax
+                </TableCell>
+                <TableCell sx={{ color: "#fff", fontSize: "18px" }}>
+                  PT Amount
+                </TableCell>
                 {/* <TableCell>Loan</TableCell> */}
-                <TableCell>Health Insurance</TableCell>
-                <TableCell>Appraisal Date</TableCell>
+                <TableCell sx={{ color: "#fff", fontSize: "18px" }}>
+                  Health Insurance
+                </TableCell>
+                <TableCell sx={{ color: "#fff", fontSize: "18px" }}>
+                  Appraisal Date
+                </TableCell>
                 {/* <TableCell>Utility Allowance</TableCell> */}
               </TableRow>
             </TableHead>

@@ -15,11 +15,11 @@ import { registerSchema } from "../schemas/registerSchema";
 import { AppDispatch, RootState } from "../store";
 import { useDispatch, useSelector } from "react-redux";
 // import { action } from "../features/user/action";
-import { action as singleUser } from "../features/ singleUser /action";
+import { action as singleUser } from "../features/singleUser/action";
 import { useEffect } from "react";
 import CircularProgress from "@mui/material/CircularProgress";
 import { updatePersonalDetail } from "../network/user";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -512,7 +512,14 @@ export default function UserUpdate() {
               </Select>
             </FormControl>
           </Box>
-          <BtnSubmit btnName="Register" />
+          <BtnSubmit btnName="Update" />
+          <Typography sx={{ mt: 2 }}>
+            If you do not want to Update
+            <Link to="/user-list" style={{ color: "#1976d2" }}>
+              {" "}
+              Go To Back
+            </Link>
+          </Typography>
         </form>
         {error === "" ? (
           ""

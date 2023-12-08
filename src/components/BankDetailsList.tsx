@@ -15,6 +15,8 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
+import DeleteIcon from "@mui/icons-material/Delete";
+
 import {
   Alert,
   Box,
@@ -23,7 +25,6 @@ import {
   FormControlLabel,
   Radio,
   Stack,
-  Switch,
 } from "@mui/material";
 import { deleteBankDetails, setPrimaryAccount } from "../network/user";
 enum typeAccount {
@@ -190,17 +191,40 @@ const BankDetailsList: React.FC<BankListProps> = ({ userId }) => {
             sx={{ minWidth: 1300, overflowX: "scroll" }}
             aria-label="simple table"
           >
-            <TableHead>
+            <TableHead
+              sx={{
+                backgroundColor: "#1976d2",
+              }}
+            >
               <TableRow>
-                <TableCell>Bank Name</TableCell>
-                <TableCell>Bank Branch</TableCell>
-                <TableCell>Account Number</TableCell>
-                <TableCell>IFC Code</TableCell>
-                <TableCell>MICR Code</TableCell>
-                <TableCell>CIF Code</TableCell>
-                <TableCell>Type Account</TableCell>
-                <TableCell> Set Primary</TableCell>
-                <TableCell>Delete</TableCell>
+                <TableCell sx={{ color: "#fff", fontSize: "18px" }}>
+                  Bank Name
+                </TableCell>
+                <TableCell sx={{ color: "#fff", fontSize: "18px" }}>
+                  Bank Branch
+                </TableCell>
+                <TableCell sx={{ color: "#fff", fontSize: "18px" }}>
+                  Account Number
+                </TableCell>
+                <TableCell sx={{ color: "#fff", fontSize: "18px" }}>
+                  IFC Code
+                </TableCell>
+                <TableCell sx={{ color: "#fff", fontSize: "18px" }}>
+                  MICR Code
+                </TableCell>
+                <TableCell sx={{ color: "#fff", fontSize: "18px" }}>
+                  CIF Code
+                </TableCell>
+                <TableCell sx={{ color: "#fff", fontSize: "18px" }}>
+                  Type Account
+                </TableCell>
+                <TableCell sx={{ color: "#fff", fontSize: "18px" }}>
+                  {" "}
+                  Set Primary
+                </TableCell>
+                <TableCell sx={{ color: "#fff", fontSize: "18px" }}>
+                  Delete
+                </TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -236,6 +260,7 @@ const BankDetailsList: React.FC<BankListProps> = ({ userId }) => {
                       color="error"
                       onClick={() => handleDelete(parseInt(row.id))}
                       disabled={btnDisable && currentBankId === row.id}
+                      startIcon={<DeleteIcon />}
                     >
                       Delete
                     </Button>

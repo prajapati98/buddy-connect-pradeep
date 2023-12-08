@@ -15,9 +15,10 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
-import { Box, Button, CircularProgress } from "@mui/material";
-import { Typography } from "@mui/material";
+import { Alert, Box, Button, CircularProgress } from "@mui/material";
 import { deleteFamilyMembers } from "../network/user";
+import DeleteIcon from "@mui/icons-material/Delete";
+
 enum Gender {
   Male = "male",
   Female = "female",
@@ -101,7 +102,15 @@ const FamilyList: React.FC<FamilyListProps> = ({ userId }) => {
           justifyContent: "center",
         }}
       >
-        <Typography>{selectedState.errorMessage}</Typography>
+        <Alert
+          variant="filled"
+          severity="error"
+          sx={{
+            marginTop: 2,
+          }}
+        >
+          {selectedState.errorMessage}
+        </Alert>
       </Box>
     );
   }
@@ -128,15 +137,33 @@ const FamilyList: React.FC<FamilyListProps> = ({ userId }) => {
             sx={{ minWidth: 1300, overflowX: "scroll" }}
             aria-label="simple table"
           >
-            <TableHead>
+            <TableHead
+              sx={{
+                backgroundColor: "#1976d2",
+              }}
+            >
               <TableRow>
-                <TableCell>Name</TableCell>
-                <TableCell>Contact</TableCell>
-                <TableCell>Date Of Birth</TableCell>
-                <TableCell>Address</TableCell>
-                <TableCell>Relation</TableCell>
-                <TableCell>Gender</TableCell>
-                <TableCell>Delete</TableCell>
+                <TableCell sx={{ color: "#fff", fontSize: "18px" }}>
+                  Name
+                </TableCell>
+                <TableCell sx={{ color: "#fff", fontSize: "18px" }}>
+                  Contact
+                </TableCell>
+                <TableCell sx={{ color: "#fff", fontSize: "18px" }}>
+                  Date Of Birth
+                </TableCell>
+                <TableCell sx={{ color: "#fff", fontSize: "18px" }}>
+                  Address
+                </TableCell>
+                <TableCell sx={{ color: "#fff", fontSize: "18px" }}>
+                  Relation
+                </TableCell>
+                <TableCell sx={{ color: "#fff", fontSize: "18px" }}>
+                  Gender
+                </TableCell>
+                <TableCell sx={{ color: "#fff", fontSize: "18px" }}>
+                  Delete
+                </TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -153,6 +180,7 @@ const FamilyList: React.FC<FamilyListProps> = ({ userId }) => {
                       variant="contained"
                       color="error"
                       onClick={() => handleDelete(parseInt(row.id))}
+                      startIcon={<DeleteIcon />}
                     >
                       Delete
                     </Button>

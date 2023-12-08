@@ -9,7 +9,7 @@ import {
   Button,
 } from "@mui/material";
 import { useParams } from "react-router-dom";
-import { action as singleUser } from "../features/ singleUser /action";
+import { action as singleUser } from "../features/singleUser/action";
 import { AppDispatch, RootState } from "../store";
 import { useDispatch, useSelector } from "react-redux";
 import avatar from "../assets/image/avatar.jpg";

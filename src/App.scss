@@ -3,6 +3,27 @@
   padding: 0;
   box-sizing: border-box;
 }
+/* width */
+*::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+
+/* Track */
+*::-webkit-scrollbar-track {
+  border-radius: 10px;
+}
+
+/* Handle */
+*::-webkit-scrollbar-thumb {
+  background: #1976d2;
+  border-radius: 10px;
+}
+
+/* Handle on hover */
+*::-webkit-scrollbar-thumb:hover {
+  background: #1976d2d7;
+}
 .loginFrom {
   box-shadow: 0px 4px 15px 0px rgba(0, 0, 0, 0.15);
   width: 400px;
@@ -15,9 +36,9 @@
     width: 100%;
   }
 }
-.RegistrationFrom {
-  box-shadow: 0px 4px 15px 0px rgba(0, 0, 0, 0.15);
-  width: 550px;
-  padding: 20px 20px;
-  border-radius: 10px;
-}
+// .RegistrationFrom {
+//   box-shadow: 0px 4px 15px 0px rgba(0, 0, 0, 0.15);
+//   width: 550px;
+//   padding: 20px 20px;
+//   border-radius: 10px;
+// }
