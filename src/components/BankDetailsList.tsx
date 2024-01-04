@@ -55,18 +55,18 @@ const BankDetailsList: React.FC<BankListProps> = ({ userId }) => {
   const [currentBankId, setCurrentBankId] = useState("");
   const [btnDisable, setBtnDisable] = useState(false);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true);
-      try {
-        await dispatch(action(userId));
-      } finally {
-        setLoading(false);
-      }
-    };
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     setLoading(true);
+  //     try {
+  //       await dispatch(action(userId));
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   };
 
-    fetchData();
-  }, [dispatch, userId]);
+  //   fetchData();
+  // }, [dispatch, userId]);
 
   const [bankListData, setBankListData] = useState<bankListData[]>([]);
   const [error, setError] = useState<string>("");

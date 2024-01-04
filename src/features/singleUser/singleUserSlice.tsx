@@ -2,7 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import { action } from "./action";
 
 interface userState {
-  singleUserData: null | [];
+  singleUserData: [];
   errorMessage: null | string;
   loading: boolean;
   isError: boolean;
@@ -10,7 +10,7 @@ interface userState {
 
 const initialState: userState = {
   errorMessage: null,
-  singleUserData: null,
+  singleUserData: [],
   loading: false,
   isError: false,
 };

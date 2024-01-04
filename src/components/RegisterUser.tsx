@@ -15,7 +15,7 @@ import { registerSchema } from "../schemas/registerSchema";
 import { AppDispatch, RootState } from "../store";
 import { useDispatch, useSelector } from "react-redux";
 import { action } from "../features/user/action";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
@@ -29,6 +29,7 @@ export default function RegisterUser() {
   enum Gender {
     Male = "male",
     Female = "female",
+    Other = "other",
   }
 
   interface FormData {
@@ -83,11 +84,12 @@ export default function RegisterUser() {
     },
   });
   const selectedState = useSelector((state: RootState) => state.user);
+
   if (selectedState.user) {
-    setTimeout(() => {
-      // Navigate to "/user-list" after 2 seconds
-      navigate("/user-list");
-    }, 2000);
+    // setTimeout(() => {
+    //   // Navigate to "/user-list" after 2 seconds
+    // }, 2000);
+    navigate("/users");
   }
 
   return (
@@ -136,9 +138,9 @@ export default function RegisterUser() {
                 width: { xs: "100%", md: "46%" },
                 mt: { xs: "16px", md: 0 },
                 mb: { xs: "16px", md: 0 },
+                position: "relative",
               }}
               size="small"
-              className="pppppppp"
             >
               <InputLabel id="select-role">Role</InputLabel>
               <Select
@@ -155,6 +157,20 @@ export default function RegisterUser() {
                 <MenuItem value="hr">hr</MenuItem>
                 <MenuItem value="associate">associate</MenuItem>
               </Select>
+              {errors.role && touched.role && (
+                <span
+                  style={{
+                    color: "#d32f2f",
+                    fontSize: "12px",
+                    position: "absolute",
+                    width: "100%",
+                    bottom: "-22px",
+                    left: 0,
+                  }}
+                >
+                  {errors.role}
+                </span>
+              )}
             </FormControl>
           </Box>
           <Box
@@ -324,21 +340,59 @@ export default function RegisterUser() {
                 </span>
               )}
             </Box>
-
-            <RadioGroup
-              row
-              name="gender"
-              sx={{ mt: { xs: "26px", md: 0 } }}
-              value={values.gender} // Add this line to bind the selected value
-              onChange={handleChange} // Add this line to handle changes
+            <Box
+              sx={{
+                minWidth: 120,
+                display: { xs: "block", md: "flex" },
+                "& > :not(style)": { mt: 2 },
+                justifyContent: "space-between",
+              }}
             >
-              <FormControlLabel value="male" control={<Radio />} label="Male" />
-              <FormControlLabel
-                value="female"
-                control={<Radio />}
-                label="Female"
-              />
-            </RadioGroup>
+              <FormControl
+                sx={{
+                  width: { xs: "100%", md: 230 },
+                  position: "relative",
+                }}
+                size="small"
+              >
+                <InputLabel id="demo-simple-select-label">
+                  Designation
+                </InputLabel>
+                <Select
+                  labelId="demo-simple-select-label"
+                  id="demo-simple-select"
+                  value={values.designation}
+                  label="Designation"
+                  onChange={(event) =>
+                    setFieldValue("designation", event.target.value as string)
+                  }
+                >
+                  <MenuItem value="Manager">Manager</MenuItem>
+                  <MenuItem value="Team Lead">Team Lead</MenuItem>
+                  <MenuItem value="Senior">Software Engineer</MenuItem>
+                  <MenuItem value="Manager">Associate Engineer</MenuItem>
+                  <MenuItem value="Junior Software Engineer">
+                    Junior Software Engineer
+                  </MenuItem>
+                  <MenuItem value="TraineeEngineer">Trainee Engineer</MenuItem>
+                  <MenuItem value="Intern">Intern</MenuItem>
+                </Select>
+                {errors.designation && touched.designation && (
+                  <span
+                    style={{
+                      color: "#d32f2f",
+                      fontSize: "12px",
+                      position: "absolute",
+                      width: "100%",
+                      bottom: "-8px",
+                      left: 0,
+                    }}
+                  >
+                    {errors.designation}
+                  </span>
+                )}
+              </FormControl>
+            </Box>
           </Box>
           <Box
             sx={{
@@ -364,7 +418,6 @@ export default function RegisterUser() {
                 mb: { xs: "16px !important", md: "8px" },
                 width: { xs: "100%", md: "45.5%" },
               }}
-              className="pradeep"
             >
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <DemoContainer
@@ -407,45 +460,28 @@ export default function RegisterUser() {
               touched={touched}
             />
           </Box>
-          <Box
-            sx={{
-              minWidth: 120,
-              display: { xs: "block", md: "flex" },
-              "& > :not(style)": { mt: 2 },
-              justifyContent: "space-between",
-            }}
-          >
-            <FormControl fullWidth size="small">
-              <InputLabel id="demo-simple-select-label">Designation</InputLabel>
-              <Select
-                labelId="demo-simple-select-label"
-                id="demo-simple-select"
-                value={values.designation}
-                label="Designation"
-                onChange={(event) =>
-                  setFieldValue("designation", event.target.value as string)
-                }
-              >
-                <MenuItem value="Manager">Manager</MenuItem>
-                <MenuItem value="Team Lead">Team Lead</MenuItem>
-                <MenuItem value="Senior">Software Engineer</MenuItem>
-                <MenuItem value="Manager">Associate Engineer</MenuItem>
-                <MenuItem value="Junior Software Engineer">
-                  Junior Software Engineer
-                </MenuItem>
-                <MenuItem value="TraineeEngineer">Trainee Engineer</MenuItem>
-                <MenuItem value="Intern">Intern</MenuItem>
-              </Select>
-            </FormControl>
+          <Box>
+            <RadioGroup
+              row
+              name="gender"
+              sx={{ mt: { xs: "26px", md: 0 } }}
+              value={values.gender}
+              onChange={handleChange}
+            >
+              <FormControlLabel value="male" control={<Radio />} label="Male" />
+              <FormControlLabel
+                value="female"
+                control={<Radio />}
+                label="Female"
+              />
+              <FormControlLabel
+                value="other"
+                control={<Radio />}
+                label="Other"
+              />
+            </RadioGroup>
           </Box>
-          <BtnSubmit btnName="Register" />
-          <Typography sx={{ mt: 2 }}>
-            If you do not want to register
-            <Link to="/" style={{ color: "#1976d2" }}>
-              {" "}
-              Go To Home
-            </Link>
-          </Typography>
+          <BtnSubmit btnName="Register" disabled={selectedState.loading} />
         </form>
         {selectedState.isError ? (
           <Alert

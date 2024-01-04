@@ -54,6 +54,7 @@ const AddBankDetailsForm: React.FC<AddFamilyFormProps> = ({
 }) => {
   const [open, setOpen] = React.useState(false);
   const [res, setRes] = React.useState<ApiResponse | undefined>();
+  const [isLoading, setIsLoading] = React.useState(false);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -86,6 +87,7 @@ const AddBankDetailsForm: React.FC<AddFamilyFormProps> = ({
     validationSchema: AddBankDetailsSchema,
 
     onSubmit: async (values, { setSubmitting }) => {
+      setIsLoading(true);
       try {
         if (userId) {
           const response = await addBankDetails(values, userId);
@@ -93,11 +95,12 @@ const AddBankDetailsForm: React.FC<AddFamilyFormProps> = ({
           setRes(responseData);
 
           if (response.data.success) {
-            setTimeout(() => {
-              onSuccess();
-              handleClose();
-              setRes(undefined);
-            }, 1000);
+            // setTimeout(() => {
+            // }, 1000);
+            onSuccess();
+            handleClose();
+            setRes(undefined);
+            setIsLoading(false);
           }
         } else {
           console.error("User ID is undefined");
@@ -112,7 +115,7 @@ const AddBankDetailsForm: React.FC<AddFamilyFormProps> = ({
   return (
     <Box>
       <Button
-        variant="contained"
+        variant="outlined"
         onClick={handleClickOpen}
         endIcon={<AddIcon />}
         sx={{
@@ -228,7 +231,7 @@ const AddBankDetailsForm: React.FC<AddFamilyFormProps> = ({
                   label="Secondary"
                 />
               </RadioGroup>
-              <BtnSubmit btnName="Add Member" />
+              <BtnSubmit btnName="Add Member" disabled={isLoading} />
               {res !== undefined && (
                 <Box>
                   {res?.success ? (

@@ -101,7 +101,7 @@ const RecentUser = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {userListData.slice(0, 5).map((row) => (
+              {userListData.slice(0, 3).map((row) => (
                 <TableRow key={row.id}>
                   <TableCell>
                     <Stack direction="row" spacing={2}>
@@ -122,7 +122,7 @@ const RecentUser = () => {
                     )}
                   </TableCell>
                   <TableCell>
-                    <Link to={`/UserInfoPage/${row.id}`}>
+                    <Link to={`/user-information/${row.id}`}>
                       <Button variant="contained">View</Button>
                     </Link>
                   </TableCell>

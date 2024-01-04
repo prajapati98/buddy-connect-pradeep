@@ -106,10 +106,10 @@ function TablePaginationActions(props: TablePaginationActionsProps) {
 //   return { name, calories, fat };
 // }
 
-interface salaryListData {
+interface DeletedListData {
   access_token: string;
   address: string;
-  alternate_contact: null | string;
+  alternate_contact: string;
   city: string;
   contact: string;
   country: string;
@@ -121,27 +121,30 @@ interface salaryListData {
   last_name: string;
   gender: string;
   id: string;
-  image: null | string;
+  image: string;
   joining_date: string;
   pan_card: string;
-  password: null | string;
+  password: string;
   role: string;
   state: string;
   status: string;
   type_user: string;
   updated_at: string;
   zip_code: string;
+  [key: string]: string;
 }
 
 const DeletedList: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
   const selectedState = useSelector((state: RootState) => state.DeletedList);
   const [search, setSearch] = React.useState("");
+  const [sortColumn, setSortColumn] = useState("");
+  const [sortDirection, setSortDirection] = useState("asc");
 
   useEffect(() => {
     dispatch(action());
   }, [dispatch]);
-  const [deletedListData, setDeletedListData] = useState<salaryListData[]>([]);
+  const [deletedListData, setDeletedListData] = useState<DeletedListData[]>([]);
   useEffect(() => {
     // Assuming selectedState contains an array of data
     if (selectedState && Array.isArray(selectedState.DeletedList)) {
@@ -174,22 +177,38 @@ const DeletedList: React.FC = () => {
     if (selectedState && Array.isArray(selectedState.DeletedList)) {
       const filteredUserList = selectedState.DeletedList.filter(
         (user: { first_name?: string; last_name?: string }) => {
-          const userName = user.first_name ? user.first_name.toLowerCase() : "";
-          const userLastName = user.last_name
-            ? user.last_name.toLowerCase()
-            : "";
-          const sanitizedSearch = search.toLowerCase().replace(/\s/g, "");
+          const fullName = `${user.first_name} ${user.last_name}`.toLowerCase();
+          const sanitizedSearch = search
+            .toLowerCase()
+            .replace(/\s+/g, " ")
+            .trim();
 
-          return (
-            userName.includes(sanitizedSearch.toLowerCase()) ||
-            userLastName.includes(sanitizedSearch.toLowerCase())
-          );
+          return fullName.includes(sanitizedSearch);
         }
       );
 
       setDeletedListData(filteredUserList);
     }
   }, [search, selectedState]);
+
+  const handleSort = (columnName: string) => {
+    const isAsc = sortColumn === columnName && sortDirection === "asc";
+    setSortColumn(columnName);
+    setSortDirection(isAsc ? "desc" : "asc");
+    setDeletedListData((prevDeletedListData) =>
+      [...prevDeletedListData].sort((a, b) => {
+        const valueA = (a[columnName] || "").toLowerCase();
+        const valueB = (b[columnName] || "").toLowerCase();
+
+        if (isAsc) {
+          return valueA.localeCompare(valueB);
+        } else {
+          return valueB.localeCompare(valueA);
+        }
+      })
+    );
+  };
+
   if (selectedState.isError) {
     return (
       <Box
@@ -262,11 +281,23 @@ const DeletedList: React.FC = () => {
               <TableCell sx={{ color: "#fff", fontSize: "18px" }}>
                 S. NO.
               </TableCell>
-              <TableCell sx={{ color: "#fff", fontSize: "18px" }}>
+              <TableCell
+                sx={{ color: "#fff", fontSize: "18px" }}
+                onClick={() => handleSort("first_name")}
+              >
                 Name
+                {sortColumn === "first_name" && (
+                  <span>{sortDirection === "asc" ? "▲" : "▼"}</span>
+                )}
               </TableCell>
-              <TableCell sx={{ color: "#fff", fontSize: "18px" }}>
+              <TableCell
+                sx={{ color: "#fff", fontSize: "18px" }}
+                onClick={() => handleSort("email")}
+              >
                 Email
+                {sortColumn === "email" && (
+                  <span>{sortDirection === "asc" ? "▲" : "▼"}</span>
+                )}
               </TableCell>
               <TableCell sx={{ color: "#fff", fontSize: "18px" }}>
                 Date of Birth
@@ -300,7 +331,7 @@ const DeletedList: React.FC = () => {
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
               .map((row, index) => (
                 <TableRow key={row.id}>
-                  <TableCell>{row.id}</TableCell>
+                  <TableCell>{index + 1}</TableCell>
                   <TableCell>{`${row.first_name} ${row.last_name}`}</TableCell>
                   <TableCell>{row.email}</TableCell>
                   <TableCell>{row.dob}</TableCell>
@@ -327,7 +358,11 @@ const DeletedList: React.FC = () => {
         <TableFooter sx={{}}>
           <TableRow className="pradeep">
             <TablePagination
-              rowsPerPageOptions={[10, 25, { label: "All", value: -1 }]}
+              rowsPerPageOptions={[
+                10,
+                25,
+                { label: "All", value: deletedListData.length },
+              ]}
               colSpan={3}
               count={deletedListData.length}
               rowsPerPage={rowsPerPage}

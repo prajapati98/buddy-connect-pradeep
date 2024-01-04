@@ -1,7 +1,10 @@
 import * as Yup from "yup";
+interface FormValues {
+  dob: string;
+}
 
 const letters = /^[a-zA-Z]{3,255}$/;
-const Number = /^(0|\+91)?\d{10}$/;
+const Number = /^(?!([0-9])\1*$)[1-9][0-9]{9,14}$/;
 const dob = /^\d{4}-\d{2}-\d{2}$/;
 const city = /^[a-zA-Z]{3,100}$/;
 const state = /^[a-zA-Z]{2,100}$/;
@@ -49,9 +52,31 @@ export const registerSchema = Yup.object().shape({
     .required("Country name is required"),
   dob: Yup.string()
     .matches(dob, "Date of Birth is not in the correct format (yyyy-mm-dd)")
-    .required("Date of Birth is required"),
+    .required("Date of Birth is required")
+    .test("age", "User must be at least 18 years old", function (value) {
+      const currentDate = new Date();
+      const birthDate = new Date(value);
+      const age = currentDate.getFullYear() - birthDate.getFullYear();
+      const isBirthdayPassed =
+        currentDate.getMonth() > birthDate.getMonth() ||
+        (currentDate.getMonth() === birthDate.getMonth() &&
+          currentDate.getDate() >= birthDate.getDate());
+
+      const adjustedAge = isBirthdayPassed ? age : age - 1;
+
+      return adjustedAge >= 18;
+    }),
   joining_date: Yup.string()
     .matches(dob, "Joining Date is not in the correct format (yyyy-mm-dd)")
+    .test("joiningDate", "is 18 years after Date of Birth.", function (value) {
+      const { dob } = this.parent as FormValues;
+
+      const birthDate = new Date(dob);
+      const eighteenYearsAgo = new Date(birthDate);
+      eighteenYearsAgo.setFullYear(eighteenYearsAgo.getFullYear() + 18);
+
+      return new Date(value as string) >= eighteenYearsAgo;
+    })
     .required("Joining Date is required"),
   pan_card: Yup.string()
     .matches(panCard, "PAN Card is not in the correct format")
@@ -59,4 +84,6 @@ export const registerSchema = Yup.object().shape({
   email: Yup.string()
     .matches(emailRegex, "Email is not in the correct format")
     .required("Email is required"),
-});
+  designation: Yup.string().required("Designation is required"),
+  role: Yup.string().required("Role is required"),
+}) as Yup.ObjectSchema<FormValues>;

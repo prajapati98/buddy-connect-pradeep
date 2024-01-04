@@ -1,5 +1,11 @@
 import React from "react";
-import { Alert, Box, TextField, Typography } from "@mui/material";
+import {
+  Alert,
+  Box,
+  CircularProgress,
+  TextField,
+  Typography,
+} from "@mui/material";
 import InputField from "./InputField";
 import BtnSubmit from "./BtnSubmit";
 import logo from "../assets/image/logo.png";
@@ -10,13 +16,7 @@ import { login, logout } from "../features/login/loginSlice";
 import { AppDispatch } from "../store";
 
 import IconButton from "@mui/material/IconButton";
-import Input from "@mui/material/Input";
-import FilledInput from "@mui/material/FilledInput";
-import OutlinedInput from "@mui/material/OutlinedInput";
-import InputLabel from "@mui/material/InputLabel";
 import InputAdornment from "@mui/material/InputAdornment";
-import FormHelperText from "@mui/material/FormHelperText";
-import FormControl from "@mui/material/FormControl";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 const Login: React.FC = () => {
@@ -51,7 +51,36 @@ const Login: React.FC = () => {
   ) => {
     event.preventDefault();
   };
-  console.log(errors.password);
+
+  if (selectedState.loading) {
+    return (
+      <Box
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <CircularProgress />
+      </Box>
+    );
+  }
+
+  if (selectedState.isError) {
+    return (
+      <Box
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        {" "}
+        <Typography>{selectedState.errorMessage}</Typography>
+      </Box>
+    );
+  }
+
   return (
     <Box
       display="flex"
@@ -142,7 +171,7 @@ const Login: React.FC = () => {
               </Typography>
             )}
           </Box>
-          <BtnSubmit btnName="Login" />
+          <BtnSubmit btnName="Login" disabled={selectedState.loading} />
         </form>
         {selectedState.isError ? (
           <Alert

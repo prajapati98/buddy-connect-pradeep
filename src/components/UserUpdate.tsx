@@ -19,12 +19,12 @@ import { action as singleUser } from "../features/singleUser/action";
 import { useEffect } from "react";
 import CircularProgress from "@mui/material/CircularProgress";
 import { updatePersonalDetail } from "../network/user";
-import { Link, useNavigate, useParams } from "react-router-dom";
-
+import { useNavigate, useParams } from "react-router-dom";
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+
 import dayjs from "dayjs";
 
 export default function UserUpdate() {
@@ -55,6 +55,7 @@ export default function UserUpdate() {
 
   const [error, setError] = React.useState("");
   const [success, setSuccess] = React.useState<boolean>(false);
+  const [isLoading, setIsLoading] = React.useState(false);
 
   useEffect(() => {
     if (userId !== undefined) {
@@ -65,13 +66,16 @@ export default function UserUpdate() {
   const selectedState = useSelector((state: RootState) => state.singleUserData);
 
   useEffect(() => {
-    // Handle the case where it's an array or null
     setSelectedUserData(
       Array.isArray(selectedState.singleUserData)
-        ? null // Handle array case if needed, or ignore it
+        ? null
         : (selectedState.singleUserData as unknown as FormData)
     );
   }, [selectedState.singleUserData]);
+
+  if (selectedState.singleUserData.length === 0) {
+    navigate("/users");
+  }
 
   enum Gender {
     Male = "male",
@@ -110,15 +114,17 @@ export default function UserUpdate() {
     validationSchema: registerSchema,
 
     onSubmit: async (values, { setSubmitting }) => {
+      setIsLoading(true);
       try {
         if (userId !== undefined) {
           const response = await updatePersonalDetail(values, userId);
-          if (response.status === 200) {
+          if (response.data.success === true) {
             setSuccess(true);
-            setTimeout(() => {
-              // Navigate to "/user-list" after 2 seconds
-              navigate("/user-list");
-            }, 2000);
+            setIsLoading(false);
+            // setTimeout(() => {
+            //   // Navigate to "/user-list" after 2 seconds
+            // }, 2000);
+            navigate("/users");
             setError("");
           }
         } else {
@@ -167,7 +173,6 @@ export default function UserUpdate() {
         sx={{
           width: { xs: "100%", md: "550px" },
           minWidth: "250px",
-
           boxShadow: "0px 4px 15px 0px rgba(0, 0, 0, 0.15)",
           padding: "20px 20px",
           borderRadius: "10px",
@@ -208,6 +213,7 @@ export default function UserUpdate() {
                 width: { xs: "100%", md: "46%" },
                 mt: { xs: "16px", md: 0 },
                 mb: { xs: "16px", md: 0 },
+                position: "relative",
               }}
               size="small"
             >
@@ -226,6 +232,20 @@ export default function UserUpdate() {
                 <MenuItem value="hr">hr</MenuItem>
                 <MenuItem value="associate">associate</MenuItem>
               </Select>
+              {errors.role && touched.role && (
+                <span
+                  style={{
+                    color: "#d32f2f",
+                    fontSize: "12px",
+                    position: "absolute",
+                    width: "100%",
+                    bottom: "-22px",
+                    left: 0,
+                  }}
+                >
+                  {errors.role}
+                </span>
+              )}
             </FormControl>
           </Box>
           <Box
@@ -396,21 +416,59 @@ export default function UserUpdate() {
                 </span>
               )}
             </Box>
-
-            <RadioGroup
-              row
-              name="gender"
-              sx={{ mt: { xs: "26px", md: 0 } }}
-              value={values.gender} // Add this line to bind the selected value
-              onChange={handleChange} // Add this line to handle changes
+            <Box
+              sx={{
+                minWidth: 120,
+                display: { xs: "block", md: "flex" },
+                "& > :not(style)": { mt: 2 },
+                justifyContent: "space-between",
+              }}
             >
-              <FormControlLabel value="male" control={<Radio />} label="Male" />
-              <FormControlLabel
-                value="female"
-                control={<Radio />}
-                label="Female"
-              />
-            </RadioGroup>
+              <FormControl
+                sx={{
+                  width: { xs: "100%", md: 230 },
+                  position: "relative",
+                }}
+                size="small"
+              >
+                <InputLabel id="demo-simple-select-label">
+                  Designation
+                </InputLabel>
+                <Select
+                  labelId="demo-simple-select-label"
+                  id="demo-simple-select"
+                  value={values.designation}
+                  label="Designation"
+                  onChange={(event) =>
+                    setFieldValue("designation", event.target.value as string)
+                  }
+                >
+                  <MenuItem value="Manager">Manager</MenuItem>
+                  <MenuItem value="Team Lead">Team Lead</MenuItem>
+                  <MenuItem value="Senior">Software Engineer</MenuItem>
+                  <MenuItem value="Manager">Associate Engineer</MenuItem>
+                  <MenuItem value="Junior Software Engineer">
+                    Junior Software Engineer
+                  </MenuItem>
+                  <MenuItem value="TraineeEngineer">Trainee Engineer</MenuItem>
+                  <MenuItem value="Intern">Intern</MenuItem>
+                </Select>
+                {errors.designation && touched.designation && (
+                  <span
+                    style={{
+                      color: "#d32f2f",
+                      fontSize: "12px",
+                      position: "absolute",
+                      width: "100%",
+                      bottom: "-8px",
+                      left: 0,
+                    }}
+                  >
+                    {errors.designation}
+                  </span>
+                )}
+              </FormControl>
+            </Box>
           </Box>
           <Box
             sx={{
@@ -481,45 +539,28 @@ export default function UserUpdate() {
               touched={touched}
             />
           </Box>
-          <Box
-            sx={{
-              minWidth: 120,
-              display: { xs: "block", md: "flex" },
-              "& > :not(style)": { mt: 2 },
-              justifyContent: "space-between",
-            }}
-          >
-            <FormControl fullWidth size="small">
-              <InputLabel id="demo-simple-select-label">Designation</InputLabel>
-              <Select
-                labelId="demo-simple-select-label"
-                id="demo-simple-select"
-                value={values.designation}
-                label="Designation"
-                onChange={(event) =>
-                  setFieldValue("designation", event.target.value as string)
-                }
-              >
-                <MenuItem value="Manager">Manager</MenuItem>
-                <MenuItem value="Team Lead">Team Lead</MenuItem>
-                <MenuItem value="Senior">Software Engineer</MenuItem>
-                <MenuItem value="Manager">Associate Engineer</MenuItem>
-                <MenuItem value="Junior Software Engineer">
-                  Junior Software Engineer
-                </MenuItem>
-                <MenuItem value="TraineeEngineer">Trainee Engineer</MenuItem>
-                <MenuItem value="Intern">Intern</MenuItem>
-              </Select>
-            </FormControl>
+          <Box>
+            <RadioGroup
+              row
+              name="gender"
+              sx={{ mt: { xs: "26px", md: 0 } }}
+              value={values.gender}
+              onChange={handleChange}
+            >
+              <FormControlLabel value="male" control={<Radio />} label="Male" />
+              <FormControlLabel
+                value="female"
+                control={<Radio />}
+                label="Female"
+              />
+              <FormControlLabel
+                value="other"
+                control={<Radio />}
+                label="Other"
+              />
+            </RadioGroup>
           </Box>
-          <BtnSubmit btnName="Update" />
-          <Typography sx={{ mt: 2 }}>
-            If you do not want to Update
-            <Link to="/user-list" style={{ color: "#1976d2" }}>
-              {" "}
-              Go To Back
-            </Link>
-          </Typography>
+          <BtnSubmit btnName="Update" disabled={isLoading} />
         </form>
         {error === "" ? (
           ""

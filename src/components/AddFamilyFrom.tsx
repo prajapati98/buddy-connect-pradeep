@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Button from "@mui/material/Button";
 import { styled } from "@mui/material/styles";
 import Dialog from "@mui/material/Dialog";
@@ -65,6 +65,7 @@ interface AddFamilyFormProps {
 }
 const AddFamilyFrom: React.FC<AddFamilyFormProps> = ({ userId, onSuccess }) => {
   const [open, setOpen] = React.useState(false);
+  const [isLoading, setIsLoading] = React.useState(false);
   const [res, setRes] = React.useState<ApiResponse | undefined>();
   const relationOptions = [
     { value: "father", label: "Father" },
@@ -107,6 +108,7 @@ const AddFamilyFrom: React.FC<AddFamilyFormProps> = ({ userId, onSuccess }) => {
     validationSchema: familyRegisterSchema,
 
     onSubmit: async (values, { setSubmitting }) => {
+      setIsLoading(true);
       try {
         if (userId) {
           const response = await AddFamilyMember(values, userId);
@@ -114,11 +116,12 @@ const AddFamilyFrom: React.FC<AddFamilyFormProps> = ({ userId, onSuccess }) => {
           setRes(responseData);
 
           if (response.data.success) {
-            setTimeout(() => {
-              onSuccess();
-              handleClose();
-              setRes(undefined);
-            }, 1000);
+            setIsLoading(false);
+            onSuccess();
+            handleClose();
+            setRes(undefined);
+            // setTimeout(() => {
+            // }, 1000);
           }
         } else {
           console.error("User ID is undefined");
@@ -133,7 +136,7 @@ const AddFamilyFrom: React.FC<AddFamilyFormProps> = ({ userId, onSuccess }) => {
   return (
     <Box>
       <Button
-        variant="contained"
+        variant="outlined"
         onClick={handleClickOpen}
         endIcon={<AddIcon />}
         sx={{
@@ -308,7 +311,7 @@ const AddFamilyFrom: React.FC<AddFamilyFormProps> = ({ userId, onSuccess }) => {
                   </span>
                 )}
               </FormControl>
-              <BtnSubmit btnName="Add Member" />
+              <BtnSubmit btnName="Add Member" disabled={isLoading} />
               {res !== undefined && (
                 <Box>
                   {res?.success ? (

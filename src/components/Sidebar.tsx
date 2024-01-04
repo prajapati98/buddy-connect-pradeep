@@ -165,7 +165,7 @@ export default function MiniDrawer({ children }: MiniDrawerProps) {
             <MenuIcon />
           </IconButton>
           <Link
-            to="/"
+            to="/dashboard"
             style={{
               padding: 0,
               margin: 0,
@@ -275,12 +275,12 @@ export default function MiniDrawer({ children }: MiniDrawerProps) {
             {
               text: "Dashboard",
               icon: <DashboardIcon />,
-              path: "/",
+              path: "/dashboard",
             },
             {
               text: "Users",
               icon: <FeaturedPlayListIcon />,
-              path: "/user-list",
+              path: "/users",
             },
             {
               text: "New User Register",
@@ -290,7 +290,7 @@ export default function MiniDrawer({ children }: MiniDrawerProps) {
             {
               text: "Former Users",
               icon: <DeleteSweepIcon />,
-              path: "/archive",
+              path: "/former-users",
             },
           ].map(({ text, icon, path }, index) => (
             <ListItem key={text} disablePadding sx={{ display: "block" }}>

@@ -40,6 +40,16 @@ const router = createBrowserRouter([
     ),
   },
   {
+    path: "/dashboard",
+    element: (
+      <AppLayout>
+        <Protected>
+          <Dashboard />
+        </Protected>
+      </AppLayout>
+    ),
+  },
+  {
     path: "/login",
     element: (
       <LoginLayout>
@@ -60,7 +70,7 @@ const router = createBrowserRouter([
     ),
   },
   {
-    path: "/user-list",
+    path: "/users",
     element: (
       <AppLayout>
         <Protected>
@@ -70,7 +80,7 @@ const router = createBrowserRouter([
     ),
   },
   {
-    path: "UserUpdate/:id",
+    path: "user-update/:id",
     element: (
       <AppLayout>
         <Protected>
@@ -80,7 +90,7 @@ const router = createBrowserRouter([
     ),
   },
   {
-    path: "UserInfoPage/:id",
+    path: "user-information/:id",
     element: (
       <AppLayout>
         <Protected>
@@ -90,7 +100,7 @@ const router = createBrowserRouter([
     ),
   },
   {
-    path: "archive",
+    path: "former-users",
     element: (
       <AppLayout>
         <Protected>

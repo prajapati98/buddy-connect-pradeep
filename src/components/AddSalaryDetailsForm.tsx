@@ -59,6 +59,7 @@ const AddSalaryDetailsForm: React.FC<AddFamilyFormProps> = ({
 }) => {
   const [open, setOpen] = React.useState(false);
   const [res, setRes] = React.useState<ApiResponse | undefined>();
+  const [isLoading, setIsLoading] = React.useState(false);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -96,6 +97,7 @@ const AddSalaryDetailsForm: React.FC<AddFamilyFormProps> = ({
     validationSchema: AddSalarySchema,
 
     onSubmit: async (values, { setSubmitting }) => {
+      setIsLoading(true);
       try {
         if (userId) {
           const response = await addSalaryDetails(values, userId);
@@ -103,11 +105,12 @@ const AddSalaryDetailsForm: React.FC<AddFamilyFormProps> = ({
           setRes(responseData);
 
           if (response.data.success) {
-            setTimeout(() => {
-              onSuccess();
-              handleClose();
-              setRes(undefined);
-            }, 1000);
+            // setTimeout(() => {
+            // }, 1000);
+            onSuccess();
+            handleClose();
+            setRes(undefined);
+            setIsLoading(false);
           }
         } else {
           console.error("User ID is undefined");
@@ -123,7 +126,7 @@ const AddSalaryDetailsForm: React.FC<AddFamilyFormProps> = ({
   return (
     <Box>
       <Button
-        variant="contained"
+        variant="outlined"
         onClick={handleClickOpen}
         endIcon={<AddIcon />}
         sx={{
@@ -298,7 +301,7 @@ const AddSalaryDetailsForm: React.FC<AddFamilyFormProps> = ({
                 handleBlur={handleBlur}
                 touched={touched}
               />
-              <BtnSubmit btnName="Add Salary" />
+              <BtnSubmit btnName="Add Salary" disabled={isLoading} />
               {res !== undefined && (
                 <Box>
                   {res?.success ? (

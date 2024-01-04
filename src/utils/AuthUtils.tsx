@@ -1,18 +1,8 @@
 export const isAuthenticated = () => {
-  const userData = localStorage.getItem("user");
-
-  if (userData) {
-    try {
-      const user = JSON.parse(userData);
-      // Check for the presence of a 'token' or other authentication data
-      if (user && user.token) {
-        return true; // User is authenticated
-      }
-    } catch (error) {
-      // Handle JSON parsing errors
-      console.error("Error parsing user data:", error);
-    }
+  // Check if 'window' is defined (ensuring it's executed on the client side)
+  if (typeof window !== "undefined") {
+    const token = localStorage.getItem("user");
+    return !!token; // Simplified to return a boolean directly
   }
-
-  return false; // User is not authenticated or data is missing/invalid
+  return false;
 };

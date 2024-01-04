@@ -3,7 +3,7 @@ import { LogOut } from "../utils/LogOut";
 import { useNavigate } from "react-router-dom";
 
 export const axiosClient = axios.create({
-  baseURL: "https://buddy-connect.encoreskydev.com/api",
+  baseURL: "https://f335-122-175-198-182.ngrok-free.app",
   timeout: 30000,
   headers: {
     Accept: "application/json",
@@ -36,11 +36,11 @@ axiosClient.interceptors.request.use(
 
 axiosClient.interceptors.response.use(
   (response) => {
-    // console.log("response", response);
+    console.log("response", response);
     if (response && response.data && response.data.type === "application/pdf") {
       return response.data;
     } else if (response.status === 200) {
-      return response;
+      return response.data;
     }
     return Promise.reject(response.data);
   },

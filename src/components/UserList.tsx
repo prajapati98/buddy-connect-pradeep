@@ -60,6 +60,7 @@ interface UserListData {
   last_name: string;
   image: string;
   status: string;
+  [key: string]: string;
 }
 // pagination
 interface TablePaginationActionsProps {
@@ -152,6 +153,29 @@ const UserList = () => {
   const [search, setSearch] = React.useState("");
   const dispatch = useDispatch<AppDispatch>();
   const selectedState = useSelector((state: RootState) => state.userList);
+  const [sortColumn, setSortColumn] = useState("");
+  const [sortDirection, setSortDirection] = useState("asc");
+
+  // Function to handle sorting
+  const handleSort = (columnName: string) => {
+    const isAsc = sortColumn === columnName && sortDirection === "asc";
+    setSortColumn(columnName);
+    setSortDirection(isAsc ? "desc" : "asc");
+
+    // Sort the user list data
+    setUserListData((prevUserListData) =>
+      [...prevUserListData].sort((a, b) => {
+        const valueA = a[columnName].toLowerCase();
+        const valueB = b[columnName].toLowerCase();
+
+        if (isAsc) {
+          return valueA.localeCompare(valueB);
+        } else {
+          return valueB.localeCompare(valueA);
+        }
+      })
+    );
+  };
 
   useEffect(() => {
     dispatch(action());
@@ -248,14 +272,10 @@ const UserList = () => {
   useEffect(() => {
     if (selectedState && Array.isArray(selectedState.userList)) {
       const filteredUserList = selectedState.userList.filter((user) => {
-        const userName = user.first_name ? user.first_name.toLowerCase() : "";
-        const userLastName = user.last_name ? user.last_name.toLowerCase() : "";
-        const sanitizedSearch = search.toLowerCase().replace(/\s/g, "");
+        const fullName = `${user.first_name} ${user.last_name}`.toLowerCase();
+        const sanitizedSearch = search.toLowerCase().replace(/\s/g, " ").trim();
 
-        return (
-          userName.includes(sanitizedSearch.toLowerCase()) ||
-          userLastName.includes(sanitizedSearch.toLowerCase())
-        );
+        return fullName.includes(sanitizedSearch);
       });
 
       setUserListData(filteredUserList);
@@ -275,6 +295,7 @@ const UserList = () => {
   }, [role]);
 
   const roleOptions = [
+    { value: "", label: "clear" },
     { value: "superAdmin", label: "Super Admin" },
     { value: "admin", label: "Admin" },
     { value: "hr", label: "HR" },
@@ -403,11 +424,23 @@ const UserList = () => {
                 <TableCell sx={{ color: "#fff", fontSize: "18px" }}>
                   Profile
                 </TableCell>
-                <TableCell sx={{ color: "#fff", fontSize: "18px" }}>
+                <TableCell
+                  sx={{ color: "#fff", fontSize: "18px" }}
+                  onClick={() => handleSort("first_name")}
+                >
                   Full Name
+                  {sortColumn === "first_name" && (
+                    <span>{sortDirection === "asc" ? "▲" : "▼"}</span>
+                  )}
                 </TableCell>
-                <TableCell sx={{ color: "#fff", fontSize: "18px" }}>
+                <TableCell
+                  sx={{ color: "#fff", fontSize: "18px" }}
+                  onClick={() => handleSort("email")}
+                >
                   Email
+                  {sortColumn === "email" && (
+                    <span>{sortDirection === "asc" ? "▲" : "▼"}</span>
+                  )}
                 </TableCell>
                 <TableCell sx={{ color: "#fff", fontSize: "18px" }}>
                   Designation
@@ -449,6 +482,7 @@ const UserList = () => {
                           <Switch
                             sx={{ m: 1 }}
                             inputProps={{ "aria-label": "controlled" }}
+                            disabled={btnDisable && row.id === currentUserId}
                             checked={row.status === "active"}
                             onChange={(event) =>
                               handleSwitchChange(event, row.id, row.status)
@@ -460,7 +494,7 @@ const UserList = () => {
                       />
                     </TableCell>
                     <TableCell>
-                      <Link to={`/UserInfoPage/${row.id}`}>
+                      <Link to={`/user-information/${row.id}`}>
                         <Button
                           variant="contained"
                           disabled={btnDisable && row.id === currentUserId}
@@ -470,7 +504,7 @@ const UserList = () => {
                       </Link>
                     </TableCell>
                     <TableCell>
-                      <Link to={`/UserUpdate/${row.id}`}>
+                      <Link to={`/user-update/${row.id}`}>
                         <Button
                           variant="contained"
                           color="warning"
@@ -500,7 +534,11 @@ const UserList = () => {
           <TableFooter sx={{}}>
             <TableRow className="pradeep">
               <TablePagination
-                rowsPerPageOptions={[5, 10, { label: "All", value: -1 }]}
+                rowsPerPageOptions={[
+                  5,
+                  10,
+                  { label: "All", value: userListData.length },
+                ]}
                 colSpan={3}
                 count={userListData.length}
                 rowsPerPage={rowsPerPage}

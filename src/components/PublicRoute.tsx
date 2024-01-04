@@ -11,7 +11,7 @@ const PublicRoute: React.FC<PublicRouteProps> = ({ children }) => {
 
   useEffect(() => {
     if (isAuthenticated()) {
-      navigate("/");
+      navigate("/dashboard");
     }
   }, [navigate]);
 

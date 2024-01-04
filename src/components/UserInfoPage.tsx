@@ -8,7 +8,7 @@ import {
   Avatar,
   Button,
 } from "@mui/material";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { action as singleUser } from "../features/singleUser/action";
 import { AppDispatch, RootState } from "../store";
 import { useDispatch, useSelector } from "react-redux";
@@ -27,7 +27,10 @@ import AddBankDetailsForm from "./AddBankDetailsForm";
 import BankDetailsList from "./BankDetailsList";
 import AddSalaryDetailsForm from "./AddSalaryDetailsForm";
 import SalaryDetailsList from "./SalaryDetailsList";
-import { Padding } from "@mui/icons-material";
+import Card from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
+import { useNavigate } from "react-router-dom";
+import EditIcon from "@mui/icons-material/Edit";
 
 const UserInfoPage: React.FC = () => {
   enum Gender {
@@ -82,6 +85,7 @@ const UserInfoPage: React.FC = () => {
 
   const selectedState = useSelector((state: RootState) => state.singleUserData);
   const [value, setValue] = React.useState("Personal");
+  const navigate = useNavigate();
 
   const handleChange = (event: React.SyntheticEvent, newValue: string) => {
     setValue(newValue);
@@ -155,6 +159,10 @@ const UserInfoPage: React.FC = () => {
         : (selectedState.singleUserData as unknown as FormData)
     );
   }, [selectedState.singleUserData]);
+
+  if (selectedState.singleUserData.length === 0) {
+    navigate("/users");
+  }
   if (selectedState.loading && selectedUserData === null) {
     return (
       <Box
@@ -308,10 +316,20 @@ const UserInfoPage: React.FC = () => {
           style={{
             marginBottom: 10,
             marginTop: 15,
+            color: "#1976d2",
+            fontSize: "30px",
           }}
         >{`${selectedUserData?.first_name} ${selectedUserData?.last_name}`}</Typography>
         <Typography>{`${selectedUserData?.designation}`}</Typography>
       </Stack>
+      <Box sx={{ textAlign: "right" }}>
+        {" "}
+        <Link to={`/user-update/${userId}`}>
+          <Button variant="contained" color="warning" startIcon={<EditIcon />}>
+            update profile
+          </Button>
+        </Link>
+      </Box>
       <Box sx={{ typography: "body1", margin: "auto", overflowX: "auto" }}>
         <TabContext value={value}>
           <Box
@@ -330,87 +348,142 @@ const UserInfoPage: React.FC = () => {
               <Tab label="Salary" value="Salary" />
             </TabList>
           </Box>
+
           <TabPanel value="Personal" sx={{ pl: 0, pr: 0 }}>
             {/* Content for Personal Information tab */}
-            <Typography variant="h5" gutterBottom>
-              User Information
-            </Typography>
-            <Typography
-              variant="body2"
-              color="textSecondary"
-              component="p"
-              sx={{ marginBottom: 1 }}
-            >
-              <strong>Email : </strong>
-              {selectedUserData?.email}
-            </Typography>
 
-            <Typography
-              variant="body2"
-              color="textSecondary"
-              component="p"
-              sx={{ marginBottom: 1 }}
-            >
-              <strong>Contact : </strong>
-              {selectedUserData?.contact}
-            </Typography>
+            <Card elevation={3} sx={{ maxWidth: 400, marginTop: 1 }}>
+              <CardContent>
+                <Typography variant="h4" gutterBottom>
+                  User Information
+                </Typography>
+                <Typography
+                  variant="body2"
+                  color="textSecondary"
+                  component="p"
+                  sx={{ marginBottom: 1 }}
+                >
+                  <strong
+                    style={{
+                      color: "#1976d2",
+                    }}
+                  >
+                    Email :{" "}
+                  </strong>
+                  {selectedUserData?.email}
+                </Typography>
 
-            <Typography
-              variant="body2"
-              color="textSecondary"
-              component="p"
-              sx={{ marginBottom: 1 }}
-            >
-              <strong>Address : </strong>
-              {selectedUserData?.address}
-            </Typography>
+                <Typography
+                  variant="body2"
+                  color="textSecondary"
+                  component="p"
+                  sx={{ marginBottom: 1 }}
+                >
+                  <strong
+                    style={{
+                      color: "#1976d2",
+                    }}
+                  >
+                    Contact :{" "}
+                  </strong>
+                  {selectedUserData?.contact}
+                </Typography>
 
-            <Typography
-              variant="body2"
-              color="textSecondary"
-              component="p"
-              sx={{ marginBottom: 1 }}
-            >
-              <strong>Gender : </strong>
-              {selectedUserData?.gender}
-            </Typography>
-            <Typography
-              variant="body2"
-              color="textSecondary"
-              component="p"
-              sx={{ marginBottom: 1 }}
-            >
-              <strong>Date Of Birth : </strong>
-              {selectedUserData?.dob}
-            </Typography>
-            <Typography
-              variant="body2"
-              color="textSecondary"
-              component="p"
-              sx={{ marginBottom: 1 }}
-            >
-              <strong>Joining Date : </strong>
-              {selectedUserData?.joining_date}
-            </Typography>
+                <Typography
+                  variant="body2"
+                  color="textSecondary"
+                  component="p"
+                  sx={{ marginBottom: 1 }}
+                >
+                  <strong
+                    style={{
+                      color: "#1976d2",
+                    }}
+                  >
+                    Address :{" "}
+                  </strong>
+                  {selectedUserData?.address}
+                </Typography>
 
-            <Typography
-              variant="body2"
-              color="textSecondary"
-              component="p"
-              sx={{ marginBottom: 1 }}
-            >
-              <strong>Designation : </strong>
-              {selectedUserData?.designation}
-            </Typography>
+                <Typography
+                  variant="body2"
+                  color="textSecondary"
+                  component="p"
+                  sx={{ marginBottom: 1 }}
+                >
+                  <strong
+                    style={{
+                      color: "#1976d2",
+                    }}
+                  >
+                    Gender :{" "}
+                  </strong>
+                  {selectedUserData?.gender}
+                </Typography>
+                <Typography
+                  variant="body2"
+                  color="textSecondary"
+                  component="p"
+                  sx={{ marginBottom: 1 }}
+                >
+                  <strong
+                    style={{
+                      color: "#1976d2",
+                    }}
+                  >
+                    Date Of Birth :{" "}
+                  </strong>
+                  {selectedUserData?.dob}
+                </Typography>
+                <Typography
+                  variant="body2"
+                  color="textSecondary"
+                  component="p"
+                  sx={{ marginBottom: 1 }}
+                >
+                  <strong
+                    style={{
+                      color: "#1976d2",
+                    }}
+                  >
+                    Joining Date :{" "}
+                  </strong>
+                  {selectedUserData?.joining_date}
+                </Typography>
 
-            <Typography
-              variant="body2"
-              color="textSecondary"
-              component="p"
-              sx={{ marginBottom: 1 }}
-            >
-              <strong>Status : </strong> {selectedUserData?.status}
-            </Typography>
+                <Typography
+                  variant="body2"
+                  color="textSecondary"
+                  component="p"
+                  sx={{ marginBottom: 1 }}
+                >
+                  <strong
+                    style={{
+                      color: "#1976d2",
+                    }}
+                  >
+                    Designation :{" "}
+                  </strong>
+                  {selectedUserData?.designation}
+                </Typography>
+
+                <Typography
+                  variant="body2"
+                  color="textSecondary"
+                  component="p"
+                  sx={{ marginBottom: 1 }}
+                >
+                  <strong
+                    style={{
+                      color: "#1976d2",
+                    }}
+                  >
+                    Status :{" "}
+                  </strong>{" "}
+                  {selectedUserData?.status}
+                </Typography>
+              </CardContent>
+            </Card>
           </TabPanel>
           <TabPanel value="Family" sx={{ pl: 0, pr: 0 }}>
             {/* Family Information tab */}

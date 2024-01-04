@@ -11,9 +11,9 @@ import RecentUser from "./RecentUser";
 import BookmarkAddedIcon from "@mui/icons-material/BookmarkAdded";
 import BookmarkAddIcon from "@mui/icons-material/BookmarkAdd";
 import DeleteSweepIcon from "@mui/icons-material/DeleteSweep";
-import { useSelector } from "react-redux";
-import { RootState } from "../store";
-
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../store";
+import { action } from "../features/getDeletedList/action";
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
   ...theme.typography.body2,
@@ -21,25 +21,70 @@ const Item = styled(Paper)(({ theme }) => ({
   textAlign: "center",
   color: theme.palette.text.secondary,
 }));
-const data = [
-  { value: 5, label: "HR", color: "#cddc39" },
-  { value: 10, label: "Admin", color: "#2e73ab" },
-  { value: 15, label: "Associate", color: "#42a5f5" },
-  { value: 20, label: "Supper Admin", color: "#00e5ff" },
-];
-
 const size = {
   width: 400,
   height: 200,
 };
 function Dashboard() {
   const selectedState = useSelector((state: RootState) => state.userList);
+  const [activeUser, setActiveUser] = React.useState(0);
+  const [deActiveUser, setDeActiveUser] = React.useState(0);
+  const [hr, setHr] = React.useState(0);
+
+  const [associate, setAssociate] = React.useState(0);
+  const [superAdmin, setSuperAdmin] = React.useState(0);
+  const [admin, setAdmin] = React.useState(0);
+
+  React.useEffect(() => {
+    let activeCount = 0;
+    let deActiveCount = 0;
+    let hrCount = 0;
+    let associateCount = 0;
+    let superAdminCount = 0;
+    let adminCount = 0;
+    if (selectedState && Array.isArray(selectedState.userList)) {
+      selectedState.userList.map((user) => {
+        if (user.status === "deActive" || user.status === "pending") {
+          deActiveCount += 1;
+        } else if (user.status === "active") {
+          activeCount += 1;
+        }
+        if (user.role === "associate") {
+          associateCount += 1;
+        } else if (user.role === "superAdmin") {
+          superAdminCount += 1;
+        } else if (user.role === "admin") {
+          adminCount += 1;
+        } else if (user.role === "hr") {
+          hrCount += 1;
+        }
+      });
+
+      setDeActiveUser(deActiveCount);
+      setActiveUser(activeCount);
+      setHr(hrCount);
+      setAssociate(associateCount);
+      setAdmin(adminCount);
+      setSuperAdmin(superAdminCount);
+    }
+  }, [selectedState]);
+
+  const data = [
+    { value: hr, label: "HR", color: "#cddc39" },
+    { value: admin, label: "Admin", color: "#2e73ab" },
+    { value: associate, label: "Associate", color: "#42a5f5" },
+    { value: superAdmin, label: "Super Admin", color: "#00e5ff" },
+  ];
+  const dispatch = useDispatch<AppDispatch>();
+
+  React.useEffect(() => {
+    dispatch(action());
+  }, [dispatch]);
   const selectedStateFormer = useSelector(
     (state: RootState) => state.DeletedList
   );
-
   return (
-    <Box sx={{ flexGrow: 1 }}>
+    <Box sx={{ flexGrow: 1, overflow: "hidden" }}>
       <Grid
         container
         spacing={2}
@@ -116,7 +161,7 @@ function Dashboard() {
                 color: "#4caf50",
               }}
             >
-              4
+              {activeUser}
             </Typography>
           </Item>{" "}
         </Grid>
@@ -151,7 +196,7 @@ function Dashboard() {
                 color: "#ff9800",
               }}
             >
-              4
+              {deActiveUser}
             </Typography>
           </Item>
         </Grid>
@@ -186,7 +231,9 @@ function Dashboard() {
                 color: "#d32f2f",
               }}
             >
-              4
+              {selectedStateFormer.DeletedList
+                ? selectedStateFormer.DeletedList?.length
+                : 0}
             </Typography>
           </Item>{" "}
         </Grid>
